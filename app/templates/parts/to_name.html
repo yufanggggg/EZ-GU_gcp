@@ -1,0 +1,77 @@
+{% extends 'parts/base.html' %}
+
+{% block content %}
+<div class="content">
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand bg-secondary navbar-dark sticky-top px-4 py-0">
+        <a href="#" class="sidebar-toggler flex-shrink-0">
+            <i class="fa fa-bars" style="color: #FFFF;"></i>
+        </a>
+        <!-- 搜尋欄 -->
+        <form class="ms-4 d-inline-flex" name="search_from"  onsubmit="return check_search_from()">
+              <input class="form-control bg-dark border-0 nav-link"  type="text"  placeholder="EX：2330" name="q" aria-label="Search" >
+            <button class="btn my-2 my-sm-0 btn-light m-2"  type="submit">Search</button>
+        </form>
+        <div class="navbar-nav align-items-center ms-auto">
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="fa fa-bell me-lg-2"></i>
+                    <span class="d-none d-lg-inline-flex">Notificatin</span>
+                </a>
+            </div>
+
+        </div>
+    </nav>
+    <!-- Navbar End -->
+
+    <!-- k_line -->
+    <div class="container-fluid pt-4 px-4">
+      <div class="row g-4" style="height: 100%;">
+          <div class="col-sm-12 col-md-8">
+              <div class="bg-secondary rounded p-4" >
+                  <div class="d-flex align-items-center justify-content-between mb-4">
+                      <h3 id="k_line_ha" class="mb-0">{{name}}</h3>
+                  </div>
+                  <div id="K_line" style="width: 100%;height:500px;"></div>
+              </div>
+          </div>
+          <div class="col-sm-12 col-md-4" >
+            <div class="bg-secondary rounded p-4" style="height: 100%; position: relative;">
+                <div class="d-flex align-items-center justify-content-between">
+                    <h6 class="mb-3">信號預測 up機率</h6>
+                </div>
+                <div class="align-items-center justify-content-between " style="text-align:center; height: 100%; position: relative;" >
+                  <img src="/static/img/up_1.png" id="up_down" style="height: 32%;margin: auto; display: flex; align-items: center"></img>
+                  <img src="/static/img/up_2.png" id="up_down" style="height: 32%; margin: auto; display: flex; align-items: center"></img>
+                  <img src="/static/img/up_3.png" id="up_down" style="height: 32%; margin: auto; display: flex; align-items: center"></img>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+
+    {% block Ranking %}
+    {% endblock %}
+
+    <!-- Footer Start -->
+    <div class="container-fluid pt-4 px-4">
+        <div class="bg-secondary rounded-top p-4">
+            <div class="row">
+                <div class="col-12 col-sm-6 text-center text-sm-start">
+                    &copy; <a href="#">BDSE25</a>第四組. 
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script>
+
+
+</script>
+{% endblock %}

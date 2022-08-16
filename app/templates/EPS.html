@@ -1,0 +1,560 @@
+{% extends 'parts/to_name.html' %}
+
+{% block Ranking %}
+<!-- EPS -->
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="bg-secondary rounded p-4" >
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <h6 class="mb-0" id="loding">EPS</h6>
+                </div>              
+                <div class="alert alert-info mb-4" role="alert">
+                  <p style="margin-bottom: 0;">
+                    EPS = 淨收入(Net Income)/在外流通股數(Shares)<br>
+                    每股可以賺多少錢，用來判斷公司是否賺錢的指標<br>
+                    (*較適用於長期投資者)
+                  </p>
+                </div>
+                <div class="alert mb-4" role="alert">
+                    <div id="EPS_Bar" style="width: 100%;height:500px;"></div>
+                </div>
+                <div class="table-responsive">
+                  <table id="EPS_TABLE" class="table table-bordered border-light mb-0 " style="text-align: center; line-height:35px;">
+                      <thead class="table-light">
+                          <tr>
+                              <th scope="col">年度</th>
+                              <th scope="col">股本(億)</th>
+                              <th scope="col">營業收入(億)</th>
+                              <th scope="col">營業毛利(億)</th>
+                              <th scope="col">營業利益(億)</th>
+                              <th scope="col">ROE(%)</th>
+                              <th scope="col">ROA(%)</th>
+                              <th scope="col">稅後EPS</th>
+                              <th scope="col">年增(元)</th>
+                              <th scope="col">EPS(元)</th>
+                          </tr>
+                      </thead>
+                      <tbody id="tb">
+
+                      </tbody>
+                  </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<!-- 繪圖 -->
+<script  type="text/javascript">
+
+    //取得網址字串
+    var url = location.href;
+    //分割字串把分割後的字串放進陣列中
+    var ary1 = url.split('/');
+    //取得name值
+    var url_name = ary1[ary1.length-1]
+    
+    var myChart = echarts.init(document.getElementById('K_line'), 'dark');
+    // , 'dark' 為暗色版
+    var option;
+
+    const upColor = '#00da3c';
+    const downColor = '#ec0000';
+
+    // 資料處理
+    function splitEPS(rawData) {
+    let categoryData = [];
+    let average = [];
+    let eps = [];
+    for (let i = 1; i < rawData.length; i++) {
+        categoryData.push(rawData[i]["年度"]);
+        average.push(Number(rawData[i]["平均價"]));
+        console.log(average);
+        eps.push(Number(rawData[i]["稅後EPS"]));
+    }
+    return {
+        categoryData: categoryData,
+        average: average,
+        eps: eps,
+    };
+}
+
+    // k_line資料預處理函式建立
+    function splitData(rawData) {
+        let categoryData = [];
+        let values = [];
+        let volumes = [];
+        let name = [];
+        for (let i = 0; i < rawData.length; i++) {
+            name.push(rawData[i].splice(0, 1)[0]);
+            categoryData.push(rawData[i].splice(0, 1)[0]);
+            values.push(rawData[i]);
+            volumes.push([i, rawData[i][4], rawData[i][0] > rawData[i][1] ? 1 : -1]);
+        }
+        return {
+            categoryData: categoryData,
+            values: values,
+            volumes: volumes,
+            name: name
+        };
+    }
+            
+    // MA計算函式建立
+    function calculateMA(dayCount, data) {
+    var result = [];
+    for (var i = 0, len = data.values.length; i < len; i++) {
+        if (i < dayCount) {
+            result.push('-');
+            continue;
+        }
+        var sum = 0;
+        for (var j = 0; j < dayCount; j++) {
+            sum += data.values[i - j][1];
+        }
+        result.push(+(sum / dayCount).toFixed(3));
+    }
+    return result;
+    }
+    
+    // 預設頁面: 發送ajax請求，從後台獲取json數據
+    $(document).ready(function () {  
+        get_EPS_Bar();
+        MTaSS();
+        getData_Kline();
+    });
+    
+    // 以下為K_line
+    function getData_Kline() {
+        $.ajax({
+        
+        url:'/K_line',
+        data:{name:url_name},
+        type:'POST',
+        async:false,
+        dataType:'json',
+        
+        success:function(data) {
+        // 成功取得資料後進行資料預處理
+        var data = splitData(data);
+
+        // 開始繪圖
+        myChart.setOption(
+            (option = {
+              
+              animation: false,
+              // title: {
+              //   text: 'K_line'
+              // },
+              legend: {
+                bottom: 10,
+                left: 'center',
+                data: [data.name[0], 'MA5', 'MA10', 'MA20', 'MA30']
+              },
+              tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                  type: 'cross'
+                },
+                borderWidth: 1,
+                borderColor: '#ccc',
+                padding: 10,
+                textStyle: {
+                  color: '#000'
+                },
+                position: function (pos, params, el, elRect, size) {
+                  const obj = {
+                    top: 10
+                  };
+                  obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
+                  return obj;
+                }
+                // extraCssText: 'width: 170px'
+              },
+              axisPointer: {
+                link: [
+                  {
+                    xAxisIndex: 'all'
+                  }
+                ],
+                label: {
+                  backgroundColor: '#777'
+                }
+              },
+              toolbox: {
+                feature: {
+                  dataZoom: {
+                    yAxisIndex: false
+                  },
+                  brush: {
+                    type: ['lineX', 'clear']
+                  }
+                }
+              },
+              brush: {
+                xAxisIndex: 'all',
+                brushLink: 'all',
+                outOfBrush: {
+                  colorAlpha: 0.1
+                }
+              },
+              visualMap: {
+                show: false,
+                seriesIndex: 5,
+                dimension: 2,
+                pieces: [
+                  {
+                    value: 1,
+                    color: downColor
+                  },
+                  {
+                    value: -1,
+                    color: upColor
+                  }
+                ]
+              },
+              grid: [
+                {
+                  left: '10%',
+                  right: '8%',
+                  height: '50%'
+                },
+                {
+                  left: '10%',
+                  right: '8%',
+                  top: '63%',
+                  height: '16%'
+                }
+              ],
+              xAxis: [
+                {
+                  type: 'category',
+                  data: data.categoryData,
+                  boundaryGap: false,
+                  axisLine: { onZero: false },
+                  splitLine: { show: false },
+                  min: 'dataMin',
+                  max: 'dataMax',
+                  axisPointer: {
+                    z: 100
+                  }
+                },
+                {
+                  type: 'category',
+                  gridIndex: 1,
+                  data: data.categoryData,
+                  boundaryGap: false,
+                  axisLine: { onZero: false },
+                  axisTick: { show: false },
+                  splitLine: { show: false },
+                  axisLabel: { show: false },
+                  min: 'dataMin',
+                  max: 'dataMax'
+                }
+              ],
+              yAxis: [
+                {
+                  scale: true,
+                  splitArea: {
+                    show: true
+                  }
+                },
+                {
+                  scale: true,
+                  gridIndex: 1,
+                  splitNumber: 2,
+                  axisLabel: { show: false },
+                  axisLine: { show: false },
+                  axisTick: { show: false },
+                  splitLine: { show: false }
+                }
+              ],
+              // 下方橫條設定
+              dataZoom: [
+                {
+                  type: 'inside',
+                  xAxisIndex: [0, 1],
+                  start: 50,
+                  end: 100
+                },
+                {
+                  show: true,
+                  xAxisIndex: [0, 1],
+                  type: 'slider',
+                  top: '85%',
+                  start: 98,
+                  end: 100
+                }
+              ],
+              // 滑鼠移過時顯示的資料設定
+              series: [
+                {
+                  name: data.name[0],
+                  type: 'candlestick',
+                  data: data.values,
+                  itemStyle: {
+                    color: upColor,
+                    color0: downColor,
+                    borderColor: undefined,
+                    borderColor0: undefined
+                  },
+                  tooltip: {
+                    formatter: function (param) {
+                      param = param[0];
+                      return [
+                        'Date: ' + param.name + '<hr size=1 style="margin: 3px 0">',
+                        'Open: ' + param.data[0] + '<br/>',
+                        'Close: ' + param.data[1] + '<br/>',
+                        'Lowest: ' + param.data[2] + '<br/>',
+                        'Highest: ' + param.data[3] + '<br/>'
+                      ].join('');
+                    }
+                  }
+                },
+                {
+                  name: 'MA5',
+                  type: 'line',
+                  data: calculateMA(5, data),
+                  smooth: true,
+                  lineStyle: {
+                    opacity: 0.5
+                  }
+                },
+                {
+                  name: 'MA10',
+                  type: 'line',
+                  data: calculateMA(10, data),
+                  smooth: true,
+                  lineStyle: {
+                    opacity: 0.5
+                  }
+                },
+                {
+                  name: 'MA20',
+                  type: 'line',
+                  data: calculateMA(20, data),
+                  smooth: true,
+                  lineStyle: {
+                    opacity: 0.5
+                  }
+                },
+                {
+                  name: 'MA30',
+                  type: 'line',
+                  data: calculateMA(30, data),
+                  smooth: true,
+                  lineStyle: {
+                    opacity: 0.5
+                  }
+                },
+                {
+                  name: 'Volume',
+                  type: 'bar',
+                  xAxisIndex: 1,
+                  yAxisIndex: 1,
+                  data: data.volumes
+                }
+              ],
+            backgroundColor: '#191C24',
+            }),
+            true
+          )
+        
+        },
+        error:function (msg) {
+        console.log(msg);
+        alert('系統發生錯誤');
+        }
+        })
+        };
+        window.addEventListener("resize",function(){
+        myChart.resize();
+        });
+
+
+    // EPS_Bar
+
+    var chartDom = document.getElementById('EPS_Bar');
+    var EPS_C = echarts.init(chartDom, 'dark');
+    var option;
+
+    function get_EPS_Bar(){  
+    $.ajax({
+    url:'/EPS',
+    data:{name:url_name},
+    type:'POST',
+    async:false,
+    dataType:'json',
+    success:function(data) {
+    var data = splitEPS(data);
+    console.log(data.categoryData);
+    // 開始繪圖
+    EPS_Bar(data);
+    EPS_C.setOption(option);
+    // 設定自動符合視窗大小
+    window.addEventListener("resize",function(){
+    EPS_C.resize();
+    });
+    
+    },
+    error:function (msg) {
+    console.log(msg);
+    alert('系統發生錯誤');
+    }
+    })
+    };
+
+    function EPS_Bar(_rawData) {
+        console.log(_rawData)
+        option = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                type: 'cross',
+                crossStyle: {
+                    color: '#999'
+                }
+                }
+            },
+            
+            legend: {
+                data: ['稅後EPS','平均價']
+            },
+            xAxis: [
+                {
+                type: 'category',
+                data: _rawData.categoryData,
+                axisPointer: {
+                    type: 'shadow'
+                },
+                inverse:true
+                }
+            ],
+            yAxis: [
+                {
+                type: 'value',
+                name: '稅後EPS(元)',
+                min: 0, //'dataMin'
+                max: 10, //'dataMax'
+                interval: 2.5,
+                axisLabel: {
+                    formatter: '{value} '
+                }
+                },
+                {
+                type: 'value',
+                name: '平均價(元)',
+                min: 0,
+                max: 100,
+                interval: 25,
+                axisLabel: {
+                    formatter: '{value} '
+                }
+                }
+            ],
+            series: [
+                {
+                name: '稅後EPS',
+                type: 'bar',
+                tooltip: {
+                    valueFormatter: function (value) {
+                    return value + ' 元';
+                    }
+                },
+                data:_rawData.eps
+                },
+                {
+                name: '平均價',
+                type: 'line',
+                yAxisIndex: 1,
+                tooltip: {
+                    valueFormatter: function (value) {
+                    return value + ' 元';
+                    }
+                },
+                data:_rawData.average
+                }
+            ],
+            backgroundColor: '#191C24',
+        };
+    }
+    option && EPS_C.setOption(option);
+
+</script>
+
+<!-- EPS -->
+<script>
+    // 設定計數器cont 讓它不要重複執行抓取表格
+    let cont = 0;
+    function MTaSS(){  
+      if(cont == 0){
+        cont ++;
+        $.ajax({
+          url:'/EPS',
+          data:{name:url_name},
+          type:'POST',
+          async:false,
+          dataType:'json',
+            success(data){                          
+                document.querySelector("#loding").textContent = '讀取中請稍後';
+                var data = eval(data);
+                // 抓取要寫入的格
+                var EPS = document.getElementById('EPS_TABLE'); 
+                // 呼叫建立資料方法 
+                getDataRow(data);
+
+                function getDataRow(data){ 
+                    // console.log(data);
+                    for(var i = 1; i < data.length; i++){
+                        var row = document.createElement('tr'); //建立row 
+  
+                        var ACell = document.createElement('td'); //建立第一列
+                        ACell.innerText = data[i]['年度']; //設定資料
+                        row.appendChild(ACell);//加入資料
+  
+                        var BCell = document.createElement('td'); //建立第2列 
+                        BCell.innerText = data[i]['股本(億)']; //設定資料
+                        row.appendChild(BCell); //將td append到 tr
+  
+                        var CCell = document.createElement('td');//建立第3  
+                        CCell.innerHTML = data[i]['營業收入(億)'];
+                        row.appendChild(CCell); 
+  
+                        var DCell = document.createElement('td');//建立第4 
+                        DCell.innerHTML = data[i]['營業毛利(億)'];
+                        row.appendChild(DCell); 
+                        var ECell = document.createElement('td');//建立第5
+                        ECell.innerHTML = data[i]['營業利益(億)']; 
+                        row.appendChild(ECell); 
+                        var FCell = document.createElement('td');//建立第6
+                        FCell.innerHTML = data[i]['ROE(%)'];
+                        row.appendChild(FCell); 
+                        var GCell = document.createElement('td');//建立第7
+                        GCell.innerHTML = data[i]['ROA(%)'];
+                        row.appendChild(GCell); 
+                        var HCell = document.createElement('td');//建立第8
+                        HCell.innerHTML = data[i]['稅後EPS'];
+                        row.appendChild(HCell); 
+                        var ICell = document.createElement('td');//建立第9
+                        ICell.innerHTML = data[i]['年增(元)'];
+                        row.appendChild(ICell); 
+                        var JCell = document.createElement('td');//建立第10
+                        JCell.innerHTML = data[i]['EPS(元)'];
+                        row.appendChild(JCell); 
+                        console.log(row);
+                    EPS.appendChild(row); 
+                    document.querySelector("#loding").textContent = 'EPS';
+                    }
+                }}
+            })
+        }else{
+            document.querySelector("#loding").textContent = 'EPS-讀取失敗';
+        }
+      return false;
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,1733 @@
+{% extends 'parts/base.html' %}
+
+{% block content %}
+<!-- Content Start -->
+<div class="content">
+      <!-- Navbar Start -->
+      <nav class="navbar navbar-expand bg-secondary navbar-dark sticky-top px-4 py-0">
+          <!-- <a href="/templates/index.html" class="navbar-brand d-flex d-lg-none me-4">
+              <h2 class="text-primary mb-0"><i class="fa fa-user-edit"></i></h2>
+          </a> -->
+          <a href="#" class="sidebar-toggler flex-shrink-0">
+              <i class="fa fa-bars" style="color: #FFFF;"></i>
+          </a>
+          <!-- 搜尋欄 -->
+          <form class="ms-4 d-inline-flex" name="search_from"  onsubmit="return check_search_from()">
+              <!-- <input class="form-control bg-dark border-0" type="search" placeholder="Search"> -->
+                <input class="form-control bg-dark border-0 nav-link"  type="text"  placeholder="EX：2330" name="q" aria-label="Search" >
+              <button class="btn my-2 my-sm-0 btn-light m-2"  type="submit">Search</button>
+          </form>
+          <div class="navbar-nav align-items-center ms-auto">
+              <div class="nav-item dropdown">
+                  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                      <i class="fa fa-bell me-lg-2"></i>
+                      <span class="d-none d-lg-inline-flex">Notificatin</span>
+                  </a>
+              </div>
+          </div>
+      </nav>
+      <!-- Navbar End -->
+
+
+      <!-- Sales Chart Start -->
+      <div class="container-fluid pt-4 px-4">
+          <div class="row g-4" style="height: 100%;">
+              <div class="col-sm-12 col-md-8" >
+                  <div class="bg-secondary rounded p-4" >
+                      <div class="d-flex align-items-center justify-content-between mb-4">
+                          <h3 id="k_line_ha" class="mb-0">{{name_ha}}</h3>
+                          <!-- <button class="btn btn-link" href="/EZ-GU">重新整理</button> -->
+                      </div>
+                      <div id="K_line" style="width: 100%;height:500px;"></div>
+                  </div>
+              </div>
+              <div class="col-sm-12 col-md-4" >
+                  <div class="bg-secondary rounded p-4" style="height: 100%; position: relative;">
+                      <div class="d-flex align-items-center justify-content-between">
+                          <h6 class="mb-3">信號預測 up機率</h6>
+                      </div>
+                      <div class="align-items-center justify-content-between " style="text-align:center; height: 100%; position: relative;" >
+                        <img src="/static/img/up_1.png" id="up_down" style="height: 32%;margin: auto; display: flex; align-items: center"></img>
+                        <img src="/static/img/up_2.png" id="up_down" style="height: 32%; margin: auto; display: flex; align-items: center"></img>
+                        <img src="/static/img/up_3.png" id="up_down" style="height: 32%; margin: auto; display: flex; align-items: center"></img>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <div class="container-fluid pt-4 px-4">
+        <div class="row g-4" >
+            <div class="col-sm-12 col-xl-6 accordion-item" >
+                <div class="bg-secondary rounded p-4" >
+
+                    <div class="d-flex align-items-center justify-content-between mb-4" >
+                        <h6  class="mb-0 accordion-header">BBAND</h6>
+                        <button id="btn_BBAND" class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" >
+                          縮放
+                        </button>
+                    </div>
+                    <div style="width: 100%; position: relative;">
+                      <div id="collapseOne" class="accordion-collapse collapse" style="width: 100%; height: 500px;">
+                        <div id="BBAND" style="position: relative;"></div>
+                      </div>
+                    </div>
+                      
+                </div>
+            </div>
+            <div class="col-sm-12 col-xl-6">
+                <div class="bg-secondary rounded p-4">
+
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h6 class="mb-0 mb-0 accordion-header">MACD</h6>
+                        <button id="btn_MACD" class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#MACD_h">
+                          縮放
+                        </button>
+                    </div>
+                    <div style="width: 100%; position: relative;">
+                      <div id="MACD_h" class="accordion-collapse collapse" style="width: 100%; height: 500px;">
+                        <div id="MACD" style="position: relative;"></div>
+                      </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <div class="container-fluid pt-4 px-4">
+        <div class="row g-4">
+            <div class="col-sm-12 col-xl-6">
+              <div class="bg-secondary rounded p-4">
+
+                  <div class="d-flex align-items-center justify-content-between mb-4">
+                      <h6 class="mb-0 accordion-header">Change_MK</h6>
+                      <button id="btn_Change_MK" class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#Change_MK_h">
+                        縮放
+                      </button>
+                  </div>
+                  <div style="width: 100%; position: relative;">
+                    <div id="Change_MK_h" class="accordion-collapse collapse" style="width: 100%; height: 500px;">
+                      <div id="Change_MK" style="position: relative;"></div>
+                    </div>
+                  </div>
+
+              </div>
+            </div>
+            <div class="col-sm-12 col-xl-6">
+                <div class="bg-secondary rounded p-4" >
+
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h6 class="mb-0 accordion-header">OBV</h6>
+                        <button id="btn_OBV" class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#OBV_h">
+                          縮放
+                        </button>
+                    </div>
+                    <div style="width: 100%; position: relative;">
+                      <div id="OBV_h" class="accordion-collapse collapse" style="width: 100%; height: 500px;">
+                        <div id="OBV" style="position: relative;"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <div class="container-fluid pt-4 px-4">
+        <div class="row g-4">
+            <div class="col-sm-12 col-xl-6">
+              <div class="bg-secondary rounded p-4">
+
+                  <div class="d-flex align-items-center justify-content-between mb-4">
+                      <h6 class="mb-0 accordion-header">KDJ</h6>
+                      <button id="btn_KDJ" class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#KDJ_h">
+                        縮放
+                      </button>
+                  </div>
+                  <div style="width: 100%; position: relative;">
+                    <div id="KDJ_h" class="accordion-collapse collapse" style="width: 100%; height: 500px;">
+                      <div id="KDJ" style="position: relative;"></div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+            <div class="col-sm-12 col-xl-6">
+                <div class="bg-secondary rounded p-4" >
+
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h6 class="mb-0 accordion-header">RSI</h6>
+                        <button id="btn_RSI" class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#RSI_h">
+                          縮放
+                        </button>
+                    </div>
+                    <div style="width: 100%; position: relative;">
+                      <div id="RSI_h" class="accordion-collapse collapse" style="width: 100%; height: 500px;">
+                        <div id="RSI" style="position: relative;"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+      <!-- Sales Chart End -->
+
+      <!-- Widgets Start -->
+      <div class="container-fluid pt-4 px-4">
+          <div class="row g-4">
+          </div>
+      </div>
+      <!-- Widgets End -->
+
+
+      <!-- Footer Start -->
+      <div class="container-fluid pt-4 px-4">
+        <div class="bg-secondary rounded-top p-4">
+            <div class="row">
+                <div class="col-12 col-sm-6 text-center text-sm-start">
+                    &copy; <a href="#">BDSE25</a>第四組. 
+                </div>
+            </div>
+        </div>
+      </div>
+      <!-- Footer End -->
+</div>
+<!-- Content End -->
+{% endblock %}
+
+{% block script %}
+<!-- 繪圖 -->
+<script type="text/javascript">
+
+
+    var myChart = echarts.init(document.getElementById('K_line'), 'dark');
+    // , 'dark' 為暗色版
+    var option;
+    
+    const upColor = '#00da3c';
+    const downColor = '#ec0000';
+    
+    // 資料預處理函式建立
+    function splitData(rawData) {
+        let categoryData = [];
+        let values = [];
+        let volumes = [];
+        let name = [];
+        for (let i = 0; i < rawData.length; i++) {
+            name.push(rawData[i].splice(0, 1)[0]);
+            categoryData.push(rawData[i].splice(0, 1)[0]);
+            values.push(rawData[i]);
+            volumes.push([i, rawData[i][4], rawData[i][0] > rawData[i][1] ? 1 : -1]);
+        }
+        return {
+            categoryData: categoryData,
+            values: values,
+            volumes: volumes,
+            name: name
+        };
+    }
+    
+    function splitData_MACD(rawData) {
+        let name = [];
+        let Data = [];
+        let MACD_V = [];
+        let MACDsignal = [];
+        let MACDhist = [];
+        for (let i = 0; i < rawData.length; i++) {
+            name.push(rawData[i].splice(0, 1)[0]);
+            Data.push(rawData[i].splice(0, 1)[0]);
+            MACD_V.push(rawData[i].splice(0, 1)[0]);
+            MACDsignal.push(rawData[i].splice(0, 1)[0]);
+            MACDhist.push(rawData[i].splice(0, 1)[0]);
+        }
+        return {
+          name: name,
+          Data: Data,
+          MACD_V: MACD_V,
+          MACDsignal: MACDsignal,
+          MACDhist: MACDhist,
+        };
+    }
+    
+    function splitData_Change_MK(rawData) {
+        let name = [];
+        let Data = [];
+        let Change_MK = [];
+    
+        for (let i = 0; i < rawData.length; i++) {
+            name.push(rawData[i].splice(0, 1)[0]);
+            Data.push(rawData[i].splice(0, 1)[0]);
+            Change_MK.push(rawData[i].splice(0, 1)[0]);
+        }
+        return {
+          name: name,
+          Data: Data,
+          Change_MK: Change_MK,
+        };
+    }
+    
+    function splitData_BBAND(rawData) {
+        let name = [];
+        let categoryData = [];
+        let values = [];
+        let upper = [];
+        let middle = [];
+        let lower = [];
+        for (let i = 0; i < rawData.length; i++) {
+            name.push(rawData[i].splice(0, 1)[0]);
+            categoryData.push(rawData[i].splice(0, 1)[0]);
+            upper.push(rawData[i].splice(0, 1)[0]);
+            middle.push(rawData[i].splice(0, 1)[0]);
+            lower.push(rawData[i].splice(0, 1)[0]);
+            values.push(rawData[i]);
+        }
+        return {
+          name: name,
+          categoryData: categoryData,
+          values: values,
+          upper: upper,
+          middle: middle,
+          lower: lower,
+        };
+    }
+    
+    function splitData_KDJ(rawData) {
+        let name = [];
+        let Data = [];
+        let SLOWK = [];
+        let SLOWD = [];
+        let SLOWJ = [];
+        for (let i = 0; i < rawData.length; i++) {
+            name.push(rawData[i].splice(0, 1)[0]);
+            Data.push(rawData[i].splice(0, 1)[0]);
+            SLOWK.push(rawData[i].splice(0, 1)[0]);
+            SLOWD.push(rawData[i].splice(0, 1)[0]);
+            SLOWJ.push(rawData[i].splice(0, 1)[0]);
+        }
+        return {
+          name: name,
+          Data: Data,
+          SLOWK: SLOWK,
+          SLOWD: SLOWD,
+          SLOWJ: SLOWJ,
+        };
+    }
+    
+    function splitData_OBV(rawData) {
+        let name = [];
+        let Data = [];
+        let OBV = [];
+    
+        for (let i = 0; i < rawData.length; i++) {
+            name.push(rawData[i].splice(0, 1)[0]);
+            Data.push(rawData[i].splice(0, 1)[0]);
+            OBV.push(rawData[i].splice(0, 1)[0]);
+        }
+        return {
+          name: name,
+          Data: Data,
+          OBV: OBV,
+        };
+    }
+    
+    function splitData_RSI(rawData) {
+        let name = [];
+        let Data = [];
+        let RSI9 = [];
+        let RSI14 = [];
+        let RSI25 = [];
+        for (let i = 0; i < rawData.length; i++) {
+            name.push(rawData[i].splice(0, 1)[0]);
+            Data.push(rawData[i].splice(0, 1)[0]);
+            RSI9.push(rawData[i].splice(0, 1)[0]);
+            RSI14.push(rawData[i].splice(0, 1)[0]);
+            RSI25.push(rawData[i].splice(0, 1)[0]);
+        }
+        return {
+          name: name,
+          Data: Data,
+          RSI9: RSI9,
+          RSI14: RSI14,
+          RSI25: RSI25,
+        };
+    }
+
+
+    // MA計算函式建立
+    function calculateMA(dayCount, data) {
+        var result = [];
+        for (var i = 0, len = data.values.length; i < len; i++) {
+            if (i < dayCount) {
+                result.push('-');
+                continue;
+            }
+            var sum = 0;
+            for (var j = 0; j < dayCount; j++) {
+                sum += data.values[i - j][1];
+            }
+            result.push(+(sum / dayCount).toFixed(3));
+        }
+        return result;
+    }
+    
+    // 取K_line名稱 判斷是.tw或.two
+    function getha(name){
+      var ha = document.getElementById('k_line_ha');
+      console.log(name);
+      
+      if (uplist.includes(name)){
+        ha.innerHTML = name + '.two';
+      }else{
+        ha.innerHTML = name + '.tw';
+      }
+    }
+
+    // 搜尋時頁面: 將search_from取得的股票號碼連同post請求一起傳到後端，取得資料後進行繪圖
+    function check_search_from(){
+      if (!search_from.q.value.length){
+        alert('請填 股票資訊');
+        return false;
+      }
+      cont ++;
+      cont_1 ++;
+      cont_2 ++;
+      cont_3 ++;
+      cont_4 ++;
+      cont_5 ++;
+
+      getha(search_from.q.value) // 搜尋時修改名稱
+      // serialize()會將表單值序列化
+      $.post('/K_line', $(search_from).serialize(), function(data){
+        //成功取得資料後進行資料處理
+        // 因為這邊取得的資料型態為字串，所以需要透過eval()將其轉為js物件，才可正常執行splitData()
+        var data = splitData(eval(data)); 
+        // 開始繪圖
+        myChart.setOption(
+        (option = {
+          backgroundColor: '#191C24',
+          animation: false,
+          legend: {
+            bottom: 10,
+            left: 'center',
+            data: [data.name[0], 'MA5', 'MA10', 'MA20', 'MA30']
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'cross'
+            },
+            borderWidth: 1,
+            borderColor: '#ccc',
+            padding: 10,
+            textStyle: {
+              color: '#000'
+            },
+            position: function (pos, params, el, elRect, size) {
+              const obj = {
+                top: 10
+              };
+              obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
+              return obj;
+            }
+            // extraCssText: 'width: 170px'
+          },
+          axisPointer: {
+            link: [
+              {
+                xAxisIndex: 'all'
+              }
+            ],
+            label: {
+              backgroundColor: '#777'
+            }
+          },
+          toolbox: {
+            feature: {
+              dataZoom: {
+                yAxisIndex: false
+              },
+              brush: {
+                type: ['lineX', 'clear']
+              }
+            }
+          },
+          brush: {
+            xAxisIndex: 'all',
+            brushLink: 'all',
+            outOfBrush: {
+              colorAlpha: 0.1
+            }
+          },
+          visualMap: {
+            show: false,
+            seriesIndex: 5,
+            dimension: 2,
+            pieces: [
+              {
+                value: 1,
+                color: downColor
+              },
+              {
+                value: -1,
+                color: upColor
+              }
+            ]
+          },
+          grid: [
+            {
+              left: '10%',
+              right: '8%',
+              height: '50%'
+            },
+            {
+              left: '10%',
+              right: '8%',
+              top: '63%',
+              height: '16%'
+            }
+          ],
+          xAxis: [
+            {
+              type: 'category',
+              data: data.categoryData,
+              boundaryGap: false,
+              axisLine: { onZero: false },
+              splitLine: { show: false },
+              min: 'dataMin',
+              max: 'dataMax',
+              axisPointer: {
+                z: 100
+              }
+            },
+            {
+              type: 'category',
+              gridIndex: 1,
+              data: data.categoryData,
+              boundaryGap: false,
+              axisLine: { onZero: false },
+              axisTick: { show: false },
+              splitLine: { show: false },
+              axisLabel: { show: false },
+              min: 'dataMin',
+              max: 'dataMax'
+            }
+          ],
+          yAxis: [
+            {
+              scale: true,
+              splitArea: {
+                show: true
+              }
+            },
+            {
+              scale: true,
+              gridIndex: 1,
+              splitNumber: 2,
+              axisLabel: { show: false },
+              axisLine: { show: false },
+              axisTick: { show: false },
+              splitLine: { show: false }
+            }
+          ],
+          // 下方橫條設定
+          dataZoom: [
+            {
+              type: 'inside',
+              xAxisIndex: [0, 1],
+              start: 50,
+              end: 100
+            },
+            {
+              show: true,
+              xAxisIndex: [0, 1],
+              type: 'slider',
+              top: '85%',
+              start: 98,
+              end: 100
+            }
+          ],
+          // 滑鼠移過時顯示的資料設定
+          series: [
+            {
+              name: data.name[0],
+              type: 'candlestick',
+              data: data.values,
+              itemStyle: {
+                color: upColor,
+                color0: downColor,
+                borderColor: undefined,
+                borderColor0: undefined
+              },
+              tooltip: {
+                formatter: function (param) {
+                  param = param[0];
+                  return [
+                    'Date: ' + param.name + '<hr size=1 style="margin: 3px 0">',
+                    'Open: ' + param.data[0] + '<br/>',
+                    'Close: ' + param.data[1] + '<br/>',
+                    'Lowest: ' + param.data[2] + '<br/>',
+                    'Highest: ' + param.data[3] + '<br/>'
+                  ].join('');
+                }
+              }
+            },
+            {
+              name: 'MA5',
+              type: 'line',
+              data: calculateMA(5, data),
+              smooth: true,
+              lineStyle: {
+                opacity: 0.5
+              }
+            },
+            {
+              name: 'MA10',
+              type: 'line',
+              data: calculateMA(10, data),
+              smooth: true,
+              lineStyle: {
+                opacity: 0.5
+              }
+            },
+            {
+              name: 'MA20',
+              type: 'line',
+              data: calculateMA(20, data),
+              smooth: true,
+              lineStyle: {
+                opacity: 0.5
+              }
+            },
+            {
+              name: 'MA30',
+              type: 'line',
+              data: calculateMA(30, data),
+              smooth: true,
+              lineStyle: {
+                opacity: 0.5
+              }
+            },
+            {
+              name: 'Volume',
+              type: 'bar',
+              xAxisIndex: 1,
+              yAxisIndex: 1,
+              data: data.volumes
+            }
+          ]
+        }),
+        true
+      )
+    
+      });
+      
+      $.post('/MACD', $(search_from).serialize(), function(data){
+        var data = splitData_MACD(eval(data));
+        MACD_lin(data);
+        MACD.setOption(option);
+      });
+      
+      $.post('/Change_MK', $(search_from).serialize(), function(data){
+        var data = splitData_Change_MK(eval(data));
+        Change_MK_lin(data);
+        Change_MK.setOption(option);
+      });
+      
+      $.post('/BBAND', $(search_from).serialize(), function(data){
+        var data = splitData_BBAND(eval(data));
+        BBAND_lin(data);
+        BBAND.setOption(option);
+      });
+
+      $.post('/KDJ', $(search_from).serialize(), function(data){
+        var data = splitData_KDJ(eval(data));
+        KDJ_lin(data);
+        KDJ.setOption(option);
+      });
+      
+      $.post('/OBV', $(search_from).serialize(), function(data){
+        var data = splitData_OBV(eval(data));
+        OBV_lin(data);
+        OBV.setOption(option);
+      });
+      
+      $.post('/RSI', $(search_from).serialize(), function(data){
+        var data = splitData_RSI(eval(data));
+        RSI_lin(data);
+        RSI.setOption(option);
+      });
+      
+      
+      // 由於已用jquery.post的方式讓表格資料回傳，所以回傳false，阻止onsubmit提交
+      return false;
+    }
+    
+    // 預設頁面: 發送ajax請求，從後台獲取json數據
+    $(document).ready(function () {  
+      getData_Kline();
+      // getData_BBAND();
+      // getData_Change_MK();
+      // getData_MACD();
+      // getData_KDJ();
+      // getData_OBV();
+      // getData_RSI();
+      // console.log(app.rawData);
+    });
+
+// 收合設定區==========================================
+
+    var width = $("#collapseOne").width(); 
+    var height = $("#collapseOne").height(); 
+    $("#BBAND").css("width", width).css("height", height);
+
+    let cont = 0
+    $('#btn_BBAND').click(function () {
+      if(cont == 0){
+        cont ++;
+        getData_BBAND()
+        $('#BBAND').css('width', '100%');
+      }else{}return false;
+    });
+
+
+    var width = $("#MACD_h").width(); 
+    var height = $("#MACD_h").height(); 
+    $("#MACD").css("width", width).css("height", height);
+
+    let cont_1 = 0
+    $('#btn_MACD').click(function () {
+      if(cont_1 == 0){
+        cont_1 ++;
+        getData_MACD()
+        $('#MACD').css('width', '100%');
+      }else{}return false;
+    });
+
+
+    var width = $("#Change_MK_h").width(); 
+    var height = $("#Change_MK_h").height(); 
+    $("#Change_MK").css("width", width).css("height", height);
+
+    let cont_2 = 0
+    $('#btn_Change_MK').click(function () {
+      if(cont_2 == 0){
+        cont_2 ++;
+        getData_Change_MK()
+        $('#Change_MK').css('width', '100%');
+      }else{}return false;
+    });
+
+
+    var width = $("#OBV_h").width(); 
+    var height = $("#OBV_h").height(); 
+    $("#OBV").css("width", width).css("height", height);
+
+    let cont_3 = 0
+    $('#btn_OBV').click(function () {
+      if(cont_3 == 0){
+        cont_3 ++;
+        getData_OBV()
+        $('#OBV').css('width', '100%');
+      }else{}return false;
+    });
+
+    var width = $("#KDJ_h").width(); 
+    var height = $("#KDJ_h").height(); 
+    $("#KDJ").css("width", width).css("height", height);
+
+    let cont_4 = 0
+    $('#btn_KDJ').click(function () {
+      if(cont_4 == 0){
+        cont_4 ++;
+        getData_KDJ()
+        $('#KDJ').css('width', '100%');
+      }else{}return false;
+    });
+
+
+    var width = $("#RSI_h").width(); 
+    var height = $("#RSI_h").height(); 
+    $("#RSI").css("width", width).css("height", height);
+
+    let cont_5 = 0
+    $('#btn_RSI').click(function () {
+      if(cont_5 == 0){
+        cont_5 ++;
+        getData_RSI()
+        $('#RSI').css('width', '100%');
+      }else{}return false;
+    });
+  
+// 收合設定區==========================================
+    
+    // 以下為K_line
+    function getData_Kline() {
+    $.ajax({
+    
+    url:'/K_line',
+    data:{},
+    type:'POST',
+    async:false,
+    dataType:'json',
+    // beforeSend: function () {
+    //     // 禁用按鈕防止重複提交
+    //     document.querySelector("#k_line_h").textContent = 'Loading...';
+    //     $("#k_line_h").attr({ disabled: "disabled" });
+    // },
+    success:function(data) {
+    // 成功取得資料後進行資料預處理
+    // console.log(typeof(data));
+    // console.log(data);
+    var data = splitData(data);
+    // console.log(data);
+    // 開始繪圖
+    myChart.setOption(
+        (option = {
+          
+          animation: false,
+          // title: {
+          //   text: 'K_line'
+          // },
+          legend: {
+            bottom: 10,
+            left: 'center',
+            data: [data.name[0], 'MA5', 'MA10', 'MA20', 'MA30']
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'cross'
+            },
+            borderWidth: 1,
+            borderColor: '#ccc',
+            padding: 10,
+            textStyle: {
+              color: '#000'
+            },
+            position: function (pos, params, el, elRect, size) {
+              const obj = {
+                top: 10
+              };
+              obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
+              return obj;
+            }
+            // extraCssText: 'width: 170px'
+          },
+          axisPointer: {
+            link: [
+              {
+                xAxisIndex: 'all'
+              }
+            ],
+            label: {
+              backgroundColor: '#777'
+            }
+          },
+          toolbox: {
+            feature: {
+              dataZoom: {
+                yAxisIndex: false
+              },
+              brush: {
+                type: ['lineX', 'clear']
+              }
+            }
+          },
+          brush: {
+            xAxisIndex: 'all',
+            brushLink: 'all',
+            outOfBrush: {
+              colorAlpha: 0.1
+            }
+          },
+          visualMap: {
+            show: false,
+            seriesIndex: 5,
+            dimension: 2,
+            pieces: [
+              {
+                value: 1,
+                color: downColor
+              },
+              {
+                value: -1,
+                color: upColor
+              }
+            ]
+          },
+          grid: [
+            {
+              left: '10%',
+              right: '8%',
+              height: '50%'
+            },
+            {
+              left: '10%',
+              right: '8%',
+              top: '63%',
+              height: '16%'
+            }
+          ],
+          xAxis: [
+            {
+              type: 'category',
+              data: data.categoryData,
+              boundaryGap: false,
+              axisLine: { onZero: false },
+              splitLine: { show: false },
+              min: 'dataMin',
+              max: 'dataMax',
+              axisPointer: {
+                z: 100
+              }
+            },
+            {
+              type: 'category',
+              gridIndex: 1,
+              data: data.categoryData,
+              boundaryGap: false,
+              axisLine: { onZero: false },
+              axisTick: { show: false },
+              splitLine: { show: false },
+              axisLabel: { show: false },
+              min: 'dataMin',
+              max: 'dataMax'
+            }
+          ],
+          yAxis: [
+            {
+              scale: true,
+              splitArea: {
+                show: true
+              }
+            },
+            {
+              scale: true,
+              gridIndex: 1,
+              splitNumber: 2,
+              axisLabel: { show: false },
+              axisLine: { show: false },
+              axisTick: { show: false },
+              splitLine: { show: false }
+            }
+          ],
+          // 下方橫條設定
+          dataZoom: [
+            {
+              type: 'inside',
+              xAxisIndex: [0, 1],
+              start: 50,
+              end: 100
+            },
+            {
+              show: true,
+              xAxisIndex: [0, 1],
+              type: 'slider',
+              top: '85%',
+              start: 98,
+              end: 100
+            }
+          ],
+          // 滑鼠移過時顯示的資料設定
+          series: [
+            {
+              name: data.name[0],
+              type: 'candlestick',
+              data: data.values,
+              itemStyle: {
+                color: upColor,
+                color0: downColor,
+                borderColor: undefined,
+                borderColor0: undefined
+              },
+              tooltip: {
+                formatter: function (param) {
+                  param = param[0];
+                  return [
+                    'Date: ' + param.name + '<hr size=1 style="margin: 3px 0">',
+                    'Open: ' + param.data[0] + '<br/>',
+                    'Close: ' + param.data[1] + '<br/>',
+                    'Lowest: ' + param.data[2] + '<br/>',
+                    'Highest: ' + param.data[3] + '<br/>'
+                  ].join('');
+                }
+              }
+            },
+            {
+              name: 'MA5',
+              type: 'line',
+              data: calculateMA(5, data),
+              smooth: true,
+              lineStyle: {
+                opacity: 0.5
+              }
+            },
+            {
+              name: 'MA10',
+              type: 'line',
+              data: calculateMA(10, data),
+              smooth: true,
+              lineStyle: {
+                opacity: 0.5
+              }
+            },
+            {
+              name: 'MA20',
+              type: 'line',
+              data: calculateMA(20, data),
+              smooth: true,
+              lineStyle: {
+                opacity: 0.5
+              }
+            },
+            {
+              name: 'MA30',
+              type: 'line',
+              data: calculateMA(30, data),
+              smooth: true,
+              lineStyle: {
+                opacity: 0.5
+              }
+            },
+            {
+              name: 'Volume',
+              type: 'bar',
+              xAxisIndex: 1,
+              yAxisIndex: 1,
+              data: data.volumes
+            }
+          ],
+        backgroundColor: '#191C24',
+        }),
+        true
+      )
+    // document.querySelector("#k_line_h").textContent = '重新整理';
+    // $("#k_line_h").removeAttr("disabled");
+    
+    },
+    error:function (msg) {
+    console.log(msg);
+    alert('系統發生錯誤');
+    }
+    
+    })
+    };
+    
+    window.addEventListener("resize",function(){
+    myChart.resize();
+    });
+    // setInterval(getData,10000); //自動輪尋，10秒一次，動態刷新(先不要開，電腦撐不住)
+    
+    
+    // 以下為MACD
+    var chartDom = document.getElementById('MACD');
+    var MACD = echarts.init(chartDom, 'dark');
+    var option;
+    
+    function getData_MACD() {
+    $.ajax({
+    
+    url:'/MACD',
+    data:{},
+    type:'POST',
+    async:false,
+    dataType:'json',
+    
+    success:function(data) {
+    // 成功取得資料後進行資料預處理
+    var data = splitData_MACD(data);
+    // 開始繪圖
+    MACD_lin(data);
+    MACD.setOption(option);
+    // 設定自動符合視窗大小
+    window.addEventListener("resize",function(){
+    MACD.resize();
+    });
+    
+    },
+    error:function (msg) {
+    console.log(msg);
+    alert('系統發生錯誤');
+    }
+    })
+    };
+    
+    function MACD_lin(_rawData) {
+      option = {
+      backgroundColor: '#191C24',
+      // title: {
+      //   text: 'MACD'
+      // },
+      tooltip: {
+        trigger: 'axis'
+      },
+      legend: {
+        data: ['MACD', 'MACDhist', 'MACDsignal']
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      toolbox: {
+        feature: {
+          saveAsImage: {}
+        }
+      },
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: _rawData.Data,
+        axisLine: { onZero: false },
+        splitLine: { show: false },
+        min: 'dataMin',
+        max: 'dataMax',
+        axisPointer: {
+          z: 100
+        }
+      },
+      yAxis: {
+        type: 'value'
+      },
+      series: [
+        {
+          name: 'MACD',
+          type: 'line',
+          stack: 'Total',
+          data: _rawData.MACD_V,
+        },
+        {
+          name: 'MACDhist',
+          type: 'bar',
+          // stack: 'Total',
+          data: _rawData.MACDhist,
+        },
+        {
+          name: 'MACDsignal',
+          type: 'line',
+          stack: 'Total',
+          data: _rawData.MACDsignal,
+        }
+      ],
+      backgroundColor: '#191C24',
+    };
+      
+    }
+    option && MACD.setOption(option);
+
+    
+    
+    // 以下為Change_MK
+    var chartDom = document.getElementById('Change_MK');
+    var Change_MK = echarts.init(chartDom, 'dark');
+    var option;
+    
+    function getData_Change_MK() {
+    $.ajax({
+    
+    url:'/Change_MK',
+    data:{},
+    type:'POST',
+    async:false,
+    dataType:'json',
+    
+    success:function(data) {
+    // 成功取得資料後進行資料預處理
+    var data = splitData_Change_MK(data);
+
+    // 開始繪圖
+    Change_MK_lin(data);
+    Change_MK.setOption(option);
+    },
+    error:function (msg) {
+    console.log(msg);
+    alert('系統發生錯誤');
+    }
+    
+    
+    })
+    };
+    window.addEventListener("resize",function(){
+      Change_MK.resize();
+    });
+    
+    function Change_MK_lin(_rawData) {
+      
+      option = {
+      backgroundColor: '#191C24',
+      // title: {
+      //   text: 'Change_MK'
+      // },
+      tooltip: {
+        trigger: 'axis'
+      },
+      legend: {
+        data: ['Change_MK']
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      toolbox: {
+        feature: {
+          saveAsImage: {}
+        }
+      },
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: _rawData.Data,
+        axisLine: { onZero: false },
+        splitLine: { show: false },
+        min: 'dataMin',
+        max: 'dataMax',
+        axisPointer: {
+          z: 100
+        }
+      },
+      yAxis: {
+        type: 'value'
+      },
+      series: [
+        {
+          name: 'Change_MK',
+          type: 'line',
+          stack: 'Total',
+          data: _rawData.Change_MK,
+        }
+      ]
+    };
+      
+    }
+    option && Change_MK.setOption(option);
+    
+    
+    // 以下為BBAND
+    var chartDom = document.getElementById('BBAND');
+    var BBAND = echarts.init(chartDom, 'dark');
+    var option;
+    
+    function getData_BBAND() {
+    $.ajax({ 
+    url:'/BBAND',
+    data:{},
+    type:'POST',
+    async:false,
+    dataType:'json',
+    success:function(data) {
+    // 成功取得資料後進行資料預處理
+    var data = splitData_BBAND(data);
+    console.log(typeof(data));
+    console.log(data);
+    console.log(data.value);
+    
+    // 開始繪圖
+    BBAND_lin(data);
+    BBAND.setOption(option);
+    // document.querySelector("#btn_BBAND").textContent = 'Show';
+    // $("#btn_BBAND").removeAttr("disabled");
+  },
+    error:function (msg) {
+    console.log(msg);
+    alert('系統發生錯誤');
+    }
+    })
+    };
+    window.addEventListener("resize",function(){
+      BBAND.resize();
+    });
+    
+    function BBAND_lin(data) {
+      option = {
+          animation: false,
+          backgroundColor: '#191C24',
+          legend: {
+            bottom: 10,
+            left: 'center',
+            data: [data.name[0], 'upper', 'middle', 'lower']
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'cross'
+            },
+            borderWidth: 1,
+            borderColor: '#ccc',
+            padding: 10,
+            textStyle: {
+              color: '#000'
+            },
+            position: function (pos, params, el, elRect, size) {
+              const obj = {
+                top: 10
+              };
+              obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
+              return obj;
+            }
+            // extraCssText: 'width: 170px'
+          },
+          axisPointer: {
+            link: [
+              {
+                xAxisIndex: 'all'
+              }
+            ],
+            label: {
+              backgroundColor: '#777'
+            }
+          },
+          toolbox: {
+            feature: {
+              dataZoom: {
+                yAxisIndex: false
+              },
+              brush: {
+                type: ['lineX', 'clear']
+              }
+            }
+          },
+          brush: {
+            xAxisIndex: 'all',
+            brushLink: 'all',
+            outOfBrush: {
+              colorAlpha: 0.1
+            }
+          },
+          visualMap: {
+            show: false,
+            seriesIndex: 5,
+            dimension: 2,
+            pieces: [
+              {
+                value: 1,
+                color: downColor,
+              },
+              {
+                value: -1,
+                color: upColor,
+    
+              }
+            ],
+    
+          },
+          grid: [
+            {
+              left: '10%',
+              right: '8%',
+              height: '50%'
+            },
+            {
+              left: '10%',
+              right: '8%',
+              top: '63%',
+              height: '16%'
+            }
+          ],
+          xAxis: [
+            {
+              type: 'category',
+              data: data.categoryData,
+              boundaryGap: false,
+              axisLine: { onZero: false },
+              splitLine: { show: false },
+              min: 'dataMin',
+              max: 'dataMax',
+              axisPointer: {
+                z: 100
+              }
+            },
+            {
+              type: 'category',
+              gridIndex: 1,
+              data: data.categoryData,
+              boundaryGap: false,
+              axisLine: { onZero: false },
+              axisTick: { show: false },
+              splitLine: { show: false },
+              axisLabel: { show: false },
+              min: 'dataMin',
+              max: 'dataMax'
+            }
+          ],
+          yAxis: [
+            {
+              scale: true,
+              splitArea: {
+                show: true
+              }
+            },
+            {
+              scale: true,
+              gridIndex: 1,
+              splitNumber: 2,
+              axisLabel: { show: false },
+              axisLine: { show: false },
+              axisTick: { show: false },
+              splitLine: { show: false }
+            }
+          ],
+          // 下方橫條設定
+          dataZoom: [
+            {
+              type: 'inside',
+              xAxisIndex: [0, 1],
+              start: 50,
+              end: 100
+            },
+            {
+              show: true,
+              xAxisIndex: [0, 1],
+              type: 'slider',
+              top: '85%',
+              start: 98,
+              end: 100
+            }
+          ],
+          // 滑鼠移過時顯示的資料設定
+          series: [
+            {
+              name: data.name[0],
+              type: 'candlestick',
+              data: data.values,
+              itemStyle: {
+                color: upColor,
+                color0: downColor,
+                borderColor: undefined,
+                borderColor0: undefined,
+                opacity: 0.4
+              },
+              tooltip: {
+                formatter: function (param) {
+                  param = param[0];
+                  return [
+                    'Date: ' + param.name + '<hr size=1 style="margin: 3px 0">',
+                    'Open: ' + param.data[0] + '<br/>',
+                    'Close: ' + param.data[1] + '<br/>',
+                    'Lowest: ' + param.data[2] + '<br/>',
+                    'Highest: ' + param.data[3] + '<br/>'
+                  ].join('');
+                }
+              }
+            },
+            {
+              name: 'upper',
+              type: 'line',
+              data: data.upper,
+              // smooth: true,
+              lineStyle: {
+                opacity: 1
+              }
+            },
+            {
+              name: 'middle',
+              type: 'line',
+              data: data.middle,
+              // smooth: true,
+              lineStyle: {
+                opacity: 1
+              }
+            },
+            {
+              name: 'lower',
+              type: 'line',
+              data: data.lower,
+              // smooth: true,
+              lineStyle: {
+                opacity: 1,
+                type:'solid'
+              }
+            },
+          ]
+        };
+      
+    }
+    option && BBAND.setOption(option);
+    
+
+
+    // 以下為KDJ 
+    var chartDom = document.getElementById('KDJ');
+    var KDJ = echarts.init(chartDom, 'dark');
+    var option;
+    
+    function getData_KDJ() {
+    $.ajax({
+    
+    url:'/KDJ',
+    data:{},
+    type:'POST',
+    async:false,
+    dataType:'json',
+    
+    success:function(data) {
+    // 成功取得資料後進行資料預處理
+    var data = splitData_KDJ(data);
+    console.log(typeof(data));
+
+    // 開始繪圖
+    KDJ_lin(data);
+    KDJ.setOption(option);
+    
+    },
+    error:function (msg) {
+    console.log(msg);
+    alert('系統發生錯誤');
+    }
+    })
+    };
+    window.addEventListener("resize",function(){
+      KDJ.resize();
+    });
+    
+    function KDJ_lin(_rawData) {
+      option = {
+      backgroundColor: '#191C24',
+      tooltip: {
+        trigger: 'axis'
+      },
+      legend: {
+        data: ['SLOWK', 'SLOWD', 'SLOWJ']
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      toolbox: {
+        feature: {
+          saveAsImage: {}
+        }
+      },
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: _rawData.Data,
+        axisLine: { onZero: false },
+        splitLine: { show: false },
+        min: 'dataMin',
+        max: 'dataMax',
+        axisPointer: {
+          z: 100
+        }
+      },
+      yAxis: {
+        type: 'value'
+      },
+      series: [
+        {
+          name: 'SLOWK',
+          type: 'line',
+          stack: 'Total',
+          data: _rawData.SLOWK,
+        },
+        {
+          name: 'SLOWD',
+          type: 'line',
+          stack: 'Total',
+          data: _rawData.SLOWD,
+        },
+        {
+          name: 'SLOWJ',
+          type: 'line',
+          stack: 'Total',
+          data: _rawData.SLOWJ,
+        }
+      ],
+      backgroundColor: '#191C24',
+    };
+      
+    }
+    option && KDJ.setOption(option);
+    
+    
+    // 以下為OBV
+    var chartDom = document.getElementById('OBV');
+    var OBV = echarts.init(chartDom, 'dark');
+    var option;
+    
+    function getData_OBV() {
+    $.ajax({
+    
+    url:'/OBV',
+    data:{},
+    type:'POST',
+    async:false,
+    dataType:'json',
+    
+    success:function(data) {
+    // 成功取得資料後進行資料預處理
+    var data = splitData_OBV(data);
+
+    // 開始繪圖
+    OBV_lin(data);
+    OBV.setOption(option);
+    },
+    error:function (msg) {
+    console.log(msg);
+    alert('系統發生錯誤');
+    }
+    
+    
+    })
+    };
+    window.addEventListener("resize",function(){
+      OBV.resize();
+    });
+    
+    function OBV_lin(_rawData) {
+      
+      option = {
+      backgroundColor: '#191C24',
+      // title: {
+      //   text: 'OBV'
+      // },
+      tooltip: {
+        trigger: 'axis'
+      },
+      legend: {
+        data: ['OBV']
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      toolbox: {
+        feature: {
+          saveAsImage: {}
+        }
+      },
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: _rawData.Data,
+        axisLine: { onZero: false },
+        splitLine: { show: false },
+        min: 'dataMin',
+        max: 'dataMax',
+        axisPointer: {
+          z: 100
+        }
+      },
+      yAxis: {
+        type: 'value'
+      },
+      series: [
+        {
+          name: 'OBV',
+          type: 'line',
+          stack: 'Total',
+          data: _rawData.OBV,
+        }
+      ]
+    };
+      
+    }
+    option && OBV.setOption(option);
+
+
+
+    // 以下為RSI
+    var chartDom = document.getElementById('RSI');
+    var RSI = echarts.init(chartDom, 'dark');
+    var option;
+    
+    function getData_RSI() {
+    $.ajax({
+    
+    url:'/RSI',
+    data:{},
+    type:'POST',
+    async:false,
+    dataType:'json',
+    
+    success:function(data) {
+    // 成功取得資料後進行資料預處理
+    var data = splitData_RSI(data);
+    console.log(typeof(data));
+    // console.log(data.Data);
+    console.log(data.RSI9);
+
+    // 開始繪圖
+    RSI_lin(data);
+    RSI.setOption(option);
+    
+    },
+    error:function (msg) {
+    console.log(msg);
+    alert('系統發生錯誤');
+    }
+    })
+    };
+    window.addEventListener("resize",function(){
+      RSI.resize();
+    });
+    
+    function RSI_lin(_rawData) {
+      option = {
+      backgroundColor: '#191C24',
+      tooltip: {
+        trigger: 'axis'
+      },
+      legend: {
+        data: ['RSI9', 'RSI14', 'RSI25']
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      toolbox: {
+        feature: {
+          saveAsImage: {}
+        }
+      },
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: _rawData.Data,
+        axisLine: { onZero: false },
+        splitLine: { show: false },
+        min: 'dataMin',
+        max: 'dataMax',
+        axisPointer: {
+          z: 100
+        }
+      },
+      yAxis: {
+        type: 'value'
+      },
+      series: [
+        {
+          name: 'RSI9',
+          type: 'line',
+          stack: 'Total',
+          data: _rawData.RSI9,
+        },
+        {
+          name: 'RSI14',
+          type: 'line',
+          stack: 'Total',
+          data: _rawData.RSI14,
+        },
+        {
+          name: 'RSI25',
+          type: 'line',
+          stack: 'Total',
+          data: _rawData.RSI25,
+        }
+      ],
+      backgroundColor: '#191C24',
+    };
+      
+    }
+    option && RSI.setOption(option);
+
+
+</script>
+{% endblock %}

@@ -1,0 +1,1607 @@
+{% extends 'parts/base.html' %}
+
+<!-- Content Start -->
+{% block content %}
+<div class="content">
+
+
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand bg-secondary navbar-dark sticky-top px-4 py-0">
+        <a href="#" class="sidebar-toggler flex-shrink-0">
+            <i class="fa fa-bars" style="color: #FFFF;"></i>
+        </a>
+
+        <div class="navbar-nav align-items-center ms-auto">
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="fa fa-bell me-lg-2"></i>
+                    <span class="d-none d-lg-inline-flex">Notificatin</span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
+                    <a href="#" class="dropdown-item">
+                        <h6 class="fw-normal mb-0">Profile updated</h6>
+                        <small>15 minutes ago</small>
+                    </a>
+                    <hr class="dropdown-divider">
+                    <a href="#" class="dropdown-item">
+                        <h6 class="fw-normal mb-0">New user added</h6>
+                        <small>15 minutes ago</small>
+                    </a>
+                    <hr class="dropdown-divider">
+                    <a href="#" class="dropdown-item">
+                        <h6 class="fw-normal mb-0">Password changed</h6>
+                        <small>15 minutes ago</small>
+                    </a>
+                    <hr class="dropdown-divider">
+                    <a href="#" class="dropdown-item text-center">See all notifications</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- Navbar End -->
+
+
+    <!-- Widget Start -->
+    <div class="container-fluid pt-4 px-4">
+        <div class="row g-4">
+            <!-- 選股推薦 -->
+            <div class="col-12">
+                <div class="bg-secondary rounded h-100 p-4">
+                    <h2 >選股推薦</h2>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="bg-secondary rounded h-100 p-4 ">
+                    <div class="nav" >
+                        <button id="SP_01" class=" p-3 nav-link btn btn-outline-warning m-2" type="button" data-bs-toggle="pill"
+                            data-bs-target="#v-pills-settings"  role="tab"
+                            aria-controls="v-pills-settings" aria-selected="false" onclick ="return check_stock20();" >投信購買標的</button>  
+                        <button id="SP_02" class="nav-link p-3 btn btn-outline-warning m-2" id="v-pills-profile-tab" data-bs-toggle="pill"
+                            data-bs-target="#v-pills-profile" type="button" role="tab"
+                            aria-controls="v-pills-profile" aria-selected="false" onclick ="return check_Turnover20();">週轉率</button>
+                        <button  class="nav-link p-3 btn btn-outline-warning m-2" id="v-pills-home-tab" data-bs-toggle="pill"
+                            data-bs-target="#v-pills-home_0" type="button" role="tab"
+                            aria-controls="v-pills-home_0" aria-selected="true">波動收縮規律</button>
+                        <button class="nav-link p-3 btn btn-outline-warning m-2" id="v-pills-messages-tab" data-bs-toggle="pill"
+                            data-bs-target="#v-pills-messages_0" type="button" role="tab"
+                            aria-controls="v-pills-messages_0" aria-selected="false">技術指標</button>
+                    </div> 
+                </div>
+            </div>
+
+            <!-- 選股表格 -->
+            <div class="col-12 tab-content align-items-start ">
+                <!-- 投信購買標的 -->
+                <div class="bg-secondary rounded tab-pane fade p-4 " id="v-pills-settings" role="tabpanel" >
+                    <div class="alert alert-light mb-4" role="alert">
+                        -依照「投信購買標的」提供投資人購買方向。
+                    </div>
+                    <div class="table-responsive">
+                        <table id="stock20_from" class="table table-bordered border-light mb-0" style="text-align: center; line-height:35px;">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col">排名</th>
+                                    <th scope="col">代號</th>
+                                    <th scope="col">名稱</th>
+                                    <th scope="col">成交</th>
+                                    <th scope="col">漲跌價</th>
+                                    <th scope="col">漲跌幅</th>
+                                    <th scope="col">成交張數</th>
+                                    <th scope="col">法人買賣日期</th>
+                                    <th scope="col">投信買進張數</th>
+                                    <th scope="col">投信賣出張數</th>
+                                    <th scope="col">投信買賣超張數</th>
+                                    <th scope="col">法人買賣超註記</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tb">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- 周轉率 -->
+                <div class="bg-secondary rounded tab-pane fade p-4" id="v-pills-profile" role="tabpanel" >
+                    <div class="alert alert-info mb-4" role="alert">
+                        -依照「週轉率排行」提供當沖族群週轉率較高較適合當沖標的。
+                    </div>
+                    <div class="table-responsive">
+                        <table id="Turnover20_from" class="table table-bordered border-light mb-0" style="text-align: center; line-height:35px;">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col">排名</th>
+                                    <th scope="col">代號</th>
+                                    <th scope="col">名稱</th>
+                                    <th scope="col">成交</th>
+                                    <th scope="col">漲跌價</th>
+                                    <th scope="col">漲跌幅</th>
+                                    <th scope="col">更新日期</th>
+                                    <th scope="col">當日成交量週轉率</th>
+                                    <th scope="col">2日累計成交量週轉率</th>
+                                    <th scope="col">3日累計成交量週轉率</th>
+                                    <th scope="col">5日累計成交量週轉率</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tb">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- 波動收縮規律 -->
+                <div class="bg-secondary rounded tab-pane fade p-4" id="v-pills-home_0" >
+                    <div class="nav">
+                        <button id="SP_03" class="nav-link p-3 btn btn-outline-warning " id="v-pills-home-tab" data-bs-toggle="pill"
+                                data-bs-target="#v-pills-home" type="button" role="tab"
+                                aria-controls="v-pills-home" aria-selected="true" style="margin-left: 0; margin-right: 1rem; margin-bottom: 1.5rem; " onclick ="return check_VCP();">強力買入</button>
+                        <button id="SP_04" class="nav-link p-3 btn btn-outline-warning " id="v-pills-home-tab" data-bs-toggle="pill"
+                                data-bs-target="#v-pills-home_02" type="button" role="tab"
+                                aria-controls="v-pills-home_02" aria-selected="true" style="margin-left: 0; margin-right: 1rem; margin-bottom: 1.5rem; " onclick ="return check_VCP_2();">買入</button>
+                        <button id="SP_05" class="nav-link p-3 btn btn-outline-warning " id="v-pills-home-tab" data-bs-toggle="pill"
+                                data-bs-target="#v-pills-home_03" type="button" role="tab"
+                                aria-controls="v-pills-home_03" aria-selected="true" style="margin-left: 0; margin-right: 1rem; margin-bottom: 1.5rem; " onclick ="return check_VCP_3();">中立&賣出</button>
+                        <button id="SP_06" class="nav-link p-3 btn btn-outline-warning " id="v-pills-home-tab" data-bs-toggle="pill"
+                                data-bs-target="#v-pills-home_04" type="button" role="tab"
+                                aria-controls="v-pills-home_04" aria-selected="true" style="margin-left: 0; margin-right: 1rem; margin-bottom: 1.5rem; " onclick ="return check_VCP_4();">強力賣出</button>
+                    </div>
+                    <div class="alert alert-warning mb-4" role="alert">
+                        -依照 VCP「波動收縮規律」設定參數，間接從台灣股市挑選出中長線股票。
+                    </div>
+                    <div class=" tab-content align-items-start">
+                        <div class="table-responsive tab-pane rounded fade" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab" >
+                            <table id="VCP_from" class="table table-bordered border-light text-light mb-0" style="text-align: center; line-height:35px;">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">日期</th>
+                                        <th scope="col">股票代號</th>
+                                        <th scope="col">High</th>
+                                        <th scope="col">Low</th>
+                                        <th scope="col">Open</th>
+                                        <th scope="col">Close</th>
+                                        <th scope="col">Volume</th>
+                                    </tr>
+                                </thead>
+                                    <tbody id="tb">
+                                    </tbody>
+                            </table>
+                        </div>
+
+                        <div class="table-responsive tab-pane rounded fade" id="v-pills-home_02" role="tabpanel" aria-labelledby="v-pills-home-tab_02" >
+                            <table id="VCP_from_02" class="table table-bordered border-light text-light mb-0" style="text-align: center; line-height:35px;">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">日期</th>
+                                        <th scope="col">股票代號</th>
+                                        <th scope="col">High</th>
+                                        <th scope="col">Low</th>
+                                        <th scope="col">Open</th>
+                                        <th scope="col">Close</th>
+                                        <th scope="col">Volume</th>
+                                    </tr>
+                                </thead>
+                                    <tbody id="tb">
+                                    </tbody>
+                            </table>
+                        </div>
+
+                        <div class="table-responsive tab-pane rounded fade" id="v-pills-home_03" role="tabpanel" aria-labelledby="v-pills-home-tab_03" >
+                            <table id="VCP_from_03" class="table table-bordered border-light text-light mb-0" style="text-align: center; line-height:35px;">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">日期</th>
+                                        <th scope="col">股票代號</th>
+                                        <th scope="col">High</th>
+                                        <th scope="col">Low</th>
+                                        <th scope="col">Open</th>
+                                        <th scope="col">Close</th>
+                                        <th scope="col">Volume</th>
+                                    </tr>
+                                </thead>
+                                    <tbody id="tb">
+                                    </tbody>
+                            </table>
+                        </div>
+
+                        <div class="table-responsive tab-pane rounded fade" id="v-pills-home_04" role="tabpanel" aria-labelledby="v-pills-home-tab_04" >
+                            <table id="VCP_from_04" class="table table-bordered border-light text-light mb-0" style="text-align: center; line-height:35px;">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">日期</th>
+                                        <th scope="col">股票代號</th>
+                                        <th scope="col">High</th>
+                                        <th scope="col">Low</th>
+                                        <th scope="col">Open</th>
+                                        <th scope="col">Close</th>
+                                        <th scope="col">Volume</th>
+                                    </tr>
+                                </thead>
+                                    <tbody id="tb">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- 技術指標 -->
+                <div class="bg-secondary rounded tab-pane fade p-4" id="v-pills-messages_0" >
+                    <div class="nav">
+                        <button id="RSI_1" class="nav-link p-3 btn btn-outline-warning " id="v-pills-messages-tab" data-bs-toggle="pill"
+                                data-bs-target="#v-pills-messages" type="button" role="tab"
+                                aria-controls="v-pills-messages" aria-selected="true" style="margin-left: 0; margin-right: 1rem; margin-bottom: 1.5rem; " onclick ="return check_RSI_1();">RSI 超買區</button>
+                        <button id="RSI_1_2" class="nav-link p-3 btn btn-outline-warning " id="v-pills-messages-tab" data-bs-toggle="pill"
+                                data-bs-target="#v-pills-messages_1_2" type="button" role="tab"
+                                aria-controls="v-pills-messages_1_2" aria-selected="true" style="margin-left: 0; margin-right: 1rem; margin-bottom: 1.5rem; " onclick ="return check_RSI_1_2();">RSI 超賣區</button>
+                        <button id="RSI_2" class="nav-link p-3 btn btn-outline-warning " id="v-pills-messages-tab" data-bs-toggle="pill"
+                                data-bs-target="#v-pills-messages_02" type="button" role="tab"
+                                aria-controls="v-pills-messages_02" aria-selected="true" style="margin-left: 0; margin-right: 1rem; margin-bottom: 1.5rem; " onclick ="return check_RSI_2();">RSI黃金交叉</button>
+                        <button id="JDK_1" class="nav-link p-3 btn btn-outline-warning " id="v-pills-messages-tab" data-bs-toggle="pill"
+                                data-bs-target="#v-pills-messages_03" type="button" role="tab"
+                                aria-controls="v-pills-messages_03" aria-selected="true" style="margin-left: 0; margin-right: 1rem; margin-bottom: 1.5rem; " onclick ="return check_JDK_1();">KDJ 超買區</button>
+                        <button id="JDK_1_2" class="nav-link p-3 btn btn-outline-warning " id="v-pills-messages-tab" data-bs-toggle="pill"
+                                data-bs-target="#v-pills-messages_03_2" type="button" role="tab"
+                                aria-controls="v-pills-messages_03_2" aria-selected="true" style="margin-left: 0; margin-right: 1rem; margin-bottom: 1.5rem; " onclick ="return check_JDK_1_2();">KDJ 超賣區</button>
+                        <button id="JDK_2" class="nav-link p-3 btn btn-outline-warning " id="v-pills-messages-tab" data-bs-toggle="pill"
+                                data-bs-target="#v-pills-messages_04" type="button" role="tab"
+                                aria-controls="v-pills-messages_04" aria-selected="true" style="margin-left: 0; margin-right: 1rem; margin-bottom: 1.5rem; " onclick ="return check_JDK_2();">KDJ 黃金交叉</button>
+                        <button id="MACD_1" class="nav-link p-3 btn btn-outline-warning " id="v-pills-messages-tab" data-bs-toggle="pill"
+                                data-bs-target="#v-pills-messages_05" type="button" role="tab"
+                                aria-controls="v-pills-messages_05" aria-selected="true" style="margin-left: 0; margin-right: 1rem; margin-bottom: 1.5rem; " onclick ="return check_MACD_1();">MACD(多方)</button>
+                        <button id="MACD_2" class="nav-link p-3 btn btn-outline-warning " id="v-pills-messages-tab" data-bs-toggle="pill"
+                                data-bs-target="#v-pills-messages_06" type="button" role="tab"
+                                aria-controls="v-pills-messages_06" aria-selected="true" style="margin-left: 0; margin-right: 1rem; margin-bottom: 1.5rem; " onclick ="return check_MACD_2();">MACD(空方)</button>
+                    </div>
+                    <div class="alert alert-success mb-4" role="alert">
+                        -依照「技術指標」提供喜好運用KD、MACD、RSI 作為買入或賣出的基準。
+                    </div>
+                    <div class=" tab-content align-items-start">
+
+                        <div class="table-responsive tab-pane rounded fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab" >
+                            <table id="RSI_from_1" class="table table-bordered border-light text-light mb-0" style="text-align: center; line-height:35px;">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">日期</th>
+                                        <th scope="col">股票代號</th>
+                                        <th scope="col">High</th>
+                                        <th scope="col">Low</th>
+                                        <th scope="col">Open</th>
+                                        <th scope="col">Close</th>
+                                        <th scope="col">Volume</th>
+                                    </tr>
+                                </thead>
+                                    <tbody id="tb">
+                                    </tbody>
+                            </table>
+                        </div>
+
+                        <div class="table-responsive tab-pane rounded fade" id="v-pills-messages_1_2" role="tabpanel" aria-labelledby="v-pills-messages-tab" >
+                            <table id="RSI_from_1_2" class="table table-bordered border-light text-light mb-0" style="text-align: center; line-height:35px;">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">日期</th>
+                                        <th scope="col">股票代號</th>
+                                        <th scope="col">High</th>
+                                        <th scope="col">Low</th>
+                                        <th scope="col">Open</th>
+                                        <th scope="col">Close</th>
+                                        <th scope="col">Volume</th>
+                                    </tr>
+                                </thead>
+                                    <tbody id="tb">
+                                    </tbody>
+                            </table>
+                        </div>
+
+                        <div class="table-responsive tab-pane rounded fade" id="v-pills-messages_02" role="tabpanel" aria-labelledby="v-pills-messages-tab_02" >
+                            <table id="RSI_from_2" class="table table-bordered border-light text-light mb-0" style="text-align: center; line-height:35px;">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">日期</th>
+                                        <th scope="col">股票代號</th>
+                                        <th scope="col">High</th>
+                                        <th scope="col">Low</th>
+                                        <th scope="col">Open</th>
+                                        <th scope="col">Close</th>
+                                        <th scope="col">Volume</th>
+                                    </tr>
+                                </thead>
+                                    <tbody id="tb">
+                                    </tbody>
+                            </table>
+                        </div>
+
+                        <div class="table-responsive tab-pane rounded fade" id="v-pills-messages_03" role="tabpanel" aria-labelledby="v-pills-messages-tab_03" >
+                            <table id="JDK_from_1" class="table table-bordered border-light text-light mb-0" style="text-align: center; line-height:35px;">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">日期</th>
+                                        <th scope="col">股票代號</th>
+                                        <th scope="col">High</th>
+                                        <th scope="col">Low</th>
+                                        <th scope="col">Open</th>
+                                        <th scope="col">Close</th>
+                                        <th scope="col">Volume</th>
+                                    </tr>
+                                </thead>
+                                    <tbody id="tb">
+                                    </tbody>
+                            </table>
+                        </div>
+
+                        <div class="table-responsive tab-pane rounded fade" id="v-pills-messages_03_2" role="tabpanel" aria-labelledby="v-pills-messages-tab_03_2" >
+                            <table id="JDK_from_1_2" class="table table-bordered border-light text-light mb-0" style="text-align: center; line-height:35px;">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">日期</th>
+                                        <th scope="col">股票代號</th>
+                                        <th scope="col">High</th>
+                                        <th scope="col">Low</th>
+                                        <th scope="col">Open</th>
+                                        <th scope="col">Close</th>
+                                        <th scope="col">Volume</th>
+                                    </tr>
+                                </thead>
+                                    <tbody id="tb">
+                                    </tbody>
+                            </table>
+                        </div>
+
+                        <div class="table-responsive tab-pane rounded fade" id="v-pills-messages_04" role="tabpanel" aria-labelledby="v-pills-messages-tab_04" >
+                            <table id="JDK_from_2" class="table table-bordered border-light text-light mb-0" style="text-align: center; line-height:35px;">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">日期</th>
+                                        <th scope="col">股票代號</th>
+                                        <th scope="col">High</th>
+                                        <th scope="col">Low</th>
+                                        <th scope="col">Open</th>
+                                        <th scope="col">Close</th>
+                                        <th scope="col">Volume</th>
+                                    </tr>
+                                </thead>
+                                    <tbody id="tb">
+                                    </tbody>
+                            </table>
+                        </div>
+
+                        <div class="table-responsive tab-pane rounded fade" id="v-pills-messages_05" role="tabpanel" aria-labelledby="v-pills-messages-tab_05" >
+                            <table id="MACD_from_1" class="table table-bordered border-light text-light mb-0" style="text-align: center; line-height:35px;">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">日期</th>
+                                        <th scope="col">股票代號</th>
+                                        <th scope="col">High</th>
+                                        <th scope="col">Low</th>
+                                        <th scope="col">Open</th>
+                                        <th scope="col">Close</th>
+                                        <th scope="col">Volume</th>
+                                    </tr>
+                                </thead>
+                                    <tbody id="tb">
+                                    </tbody>
+                            </table>
+                        </div>
+
+                        <div class="table-responsive tab-pane rounded fade" id="v-pills-messages_06" role="tabpanel" aria-labelledby="v-pills-messages-tab_06" >
+                            <table id="MACD_from_2" class="table table-bordered border-light text-light mb-0" style="text-align: center; line-height:35px;">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">日期</th>
+                                        <th scope="col">股票代號</th>
+                                        <th scope="col">High</th>
+                                        <th scope="col">Low</th>
+                                        <th scope="col">Open</th>
+                                        <th scope="col">Close</th>
+                                        <th scope="col">Volume</th>
+                                    </tr>
+                                </thead>
+                                    <tbody id="tb">
+                                    </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- 熱度圖 -->
+            <div class="col-12">
+                <div class="bg-secondary rounded h-100 p-4" style="width: 100%; position: relative;">
+                    <h2 >股市熱度圖</h2>
+                    <div id="treemap" style="resize:both; overflow: auto; width: 100%; height:900px"></div> 
+                    <!--  overflow: auto; -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Widget End -->
+
+
+    <!-- Footer Start -->
+    <div class="container-fluid pt-4 px-4">
+    <div class="bg-secondary rounded-top p-4">
+        <div class="row">
+            <div class="col-12 col-sm-6 text-center text-sm-start">
+                &copy; <a href="#">BDSE25</a>第四組. 
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- Footer End -->
+</div>
+{% endblock %}
+<!-- Content End -->
+
+{% block script %}
+<!-- 投信購買標的 -->
+<script>
+
+// 取名稱 判斷是.tw或.two
+function getablename(name){
+    console.log(name);
+
+    if (uplist.includes(name)){
+        name = name + '.two';
+    }else{
+        name = name + '.tw';
+    }
+    console.log(name);
+    return name;
+}
+
+
+// 設定計數器cont 讓它不要重複執行抓取表格
+let cont = 0;
+function check_stock20(){
+    console.log(cont);
+    // $("#tb").html("");
+    
+    if(cont == 0){
+    cont ++;
+    
+    $.ajax({
+        type: "post", // 以post方式發起請求
+        url: "/SPK_1", // 你的請求鏈接
+        data:$().serialize(), 
+        beforeSend: function () {
+            // 禁用按鈕防止重複提交
+            document.querySelector("#SP_01").textContent = '讀取中請稍後';
+            $("#SP_01").attr({ disabled: "disabled" });
+        },
+        success(data){                          
+            var data = eval(data);
+            // 抓取要寫入的格
+            var stock20 = document.getElementById('stock20_from'); 
+            // 呼叫建立資料方法 
+            getDataRow(data);        
+
+            function getDataRow(data){ 
+                // console.log(data);
+                for(var i = 0; i < 21; i++){
+                    var row = document.createElement('tr'); //建立row 
+
+                    var ACell = document.createElement('td'); //建立第一列
+                    ACell.innerText = data[i]['排  名']; //設定資料
+                    console.log(data[i]['排  名'])
+                    row.appendChild(ACell);//加入資料
+
+                    var BCell = document.createElement('td'); //建立第2列 
+                    var to_nameCell = document.createElement('a'); //建立a標籤
+                    var to_nameText = document.createTextNode(getablename(data[i]['代號'])); //建立a標籤文字
+
+                    to_nameCell.setAttribute('href','/'+'SP_01/'+data[i]['代號']); //將href加入標籤
+                    to_nameCell.setAttribute('class','btn-outline-warning'); //將href加入標籤
+                    to_nameCell.setAttribute('target','_blank'); //開新視窗
+                    to_nameCell.appendChild(to_nameText); //將文字append到標籤
+
+                    BCell.appendChild(to_nameCell); //將標籤append到td
+                    row.appendChild(BCell); //將td append到 tr
+
+                    var CCell = document.createElement('td');//建立第3  
+                    CCell.innerHTML = data[i]['名稱'];
+                    row.appendChild(CCell); 
+
+                    var DCell = document.createElement('td');//建立第4 
+                    DCell.innerHTML = data[i]['成交'];
+                    row.appendChild(DCell); 
+                    var ECell = document.createElement('td');//建立第5
+                    ECell.innerHTML = data[i]['漲跌  價']; 
+                    row.appendChild(ECell); 
+                    var FCell = document.createElement('td');//建立第6
+                    FCell.innerHTML = data[i]['漲跌  幅'];
+                    row.appendChild(FCell); 
+                    var GCell = document.createElement('td');//建立第7
+                    GCell.innerHTML = data[i]['成交  張數'];
+                    row.appendChild(GCell); 
+                    var HCell = document.createElement('td');//建立第8
+                    HCell.innerHTML = data[i]['法人  買賣  日期'];
+                    row.appendChild(HCell); 
+                    var ICell = document.createElement('td');//建立第9
+                    ICell.innerHTML = data[i]['投信  買進  張數'];
+                    row.appendChild(ICell); 
+                    var JCell = document.createElement('td');//建立第10
+                    JCell.innerHTML = data[i]['投信  賣出  張數'];
+                    row.appendChild(JCell); 
+                    var KCell = document.createElement('td');//建立第11
+                    KCell.innerHTML = data[i]['投信  買賣超  張數'];
+                    row.appendChild(KCell); 
+                    var LCell = document.createElement('td');//建立第11
+                    LCell.innerHTML = data[i]['法人  買賣超  註記'];
+                    row.appendChild(LCell); 
+                    console.log(row);
+                stock20.appendChild(row); 
+                document.querySelector("#SP_01").textContent = '投信購買標的';
+                $("#SP_01").removeAttr("disabled");
+                }
+            }}
+        })
+    }else{
+        document.querySelector("#SP_01").textContent = '投信購買標的';
+        $("#SP_01").removeAttr("disabled");
+    }
+    return false;
+}
+</script>
+
+
+<!-- Turnover標的 -->
+<script>
+// 設定計數器cont 讓它不要重複執行抓取表格
+let cont_02 = 0;
+function check_Turnover20(){
+    console.log(cont_02);
+    // $("#tb").html("");
+    
+    if(cont_02 == 0){
+    cont_02 ++;
+    
+    $.ajax({
+        type: "post", // 以post方式發起請求
+        url: "/SPK_2", // 你的請求鏈接
+        data:$().serialize(), 
+        beforeSend: function () {
+            // 禁用按鈕防止重複提交
+            document.querySelector("#SP_02").textContent = '讀取中請稍後';
+            $("#SP_02").attr({ disabled: "disabled" });
+        },
+        success(data){                          
+            var data = eval(data);
+            // 抓取要寫入的格
+            var Turnover20 = document.getElementById('Turnover20_from'); 
+            // 呼叫建立資料方法 
+            getDataRow(data);        
+
+            function getDataRow(data){ 
+                // console.log(data);
+                for(var i = 0; i < 21; i++){
+                    var row = document.createElement('tr'); //建立row 
+
+                    var ACell = document.createElement('td'); //建立第一列
+                    ACell.innerText = data[i]['排  名']; //設定資料
+                    row.appendChild(ACell);//加入資料
+
+                    var BCell = document.createElement('td'); //建立第2列 
+                    var to_nameCell = document.createElement('a'); //建立a標籤
+                    var to_nameText = document.createTextNode(getablename(data[i]['代號'])); //建立a標籤文字
+
+                    to_nameCell.setAttribute('href','/'+'SP_02/'+data[i]['代號']); //將href加入標籤
+                    to_nameCell.setAttribute('class','btn-outline-warning'); //將href加入標籤
+                    to_nameCell.setAttribute('target','_blank'); //開新視窗
+                    to_nameCell.appendChild(to_nameText); //將文字append到標籤
+
+                    BCell.appendChild(to_nameCell); //將標籤append到td
+                    row.appendChild(BCell); //將td append到 tr
+
+                    var CCell = document.createElement('td');//建立第3  
+                    CCell.innerHTML = data[i]['名稱'];
+                    row.appendChild(CCell); 
+                    var DCell = document.createElement('td');//建立第4 
+                    DCell.innerHTML = data[i]['成交'];
+                    row.appendChild(DCell); 
+                    var ECell = document.createElement('td');//建立第5
+                    ECell.innerHTML = data[i]['漲跌  價']; 
+                    row.appendChild(ECell); 
+                    var FCell = document.createElement('td');//建立第6
+                    FCell.innerHTML = data[i]['漲跌  幅'];
+                    row.appendChild(FCell); 
+                    var GCell = document.createElement('td');//建立第7
+                    GCell.innerHTML = data[i]['更新  日期'];
+                    row.appendChild(GCell); 
+                    var HCell = document.createElement('td');//建立第8
+                    HCell.innerHTML = data[i]['當日  成交量  週轉率  (%)']+'%';
+                    row.appendChild(HCell); 
+                    var ICell = document.createElement('td');//建立第9
+                    ICell.innerHTML = data[i]['2日  累計  成交量  週轉率']+'%';
+                    row.appendChild(ICell); 
+                    var JCell = document.createElement('td');//建立第10
+                    JCell.innerHTML = data[i]['3日  累計  成交量  週轉率']+'%';
+                    row.appendChild(JCell); 
+                    var KCell = document.createElement('td');//建立第11
+                    KCell.innerHTML = data[i]['5日  累計  成交量  週轉率']+'%';
+                    row.appendChild(KCell); 
+                    console.log(row);
+                Turnover20.appendChild(row); 
+                document.querySelector("#SP_02").textContent = '週轉率';
+                $("#SP_02").removeAttr("disabled");
+                }
+            }}
+        })
+    }else{
+        document.querySelector("#SP_02").textContent = '週轉率';
+        $("#SP_02").removeAttr("disabled");
+    }
+    return false;
+}
+</script>
+
+
+<!-- VCP(Volatility Contraction Pattern)(強力買入) -->
+<script>
+function getStr(name){
+    if((name.substr(-3, 3)) == '.tw'){
+        name = name.substr(0, name.length - 3);
+        console.log(name);
+    }else{
+        name = name.substr(0, name.length - 4);
+    }
+    return name;
+}
+
+let cont_03 = 0;
+function check_VCP(){
+        console.log(cont_03);
+        
+        if(cont_03 == 0){
+        cont_03 ++;
+        
+        $.ajax({
+            type: "post", // 以post方式發起請求
+            url: "/SPK_3", // 你的請求鏈接
+            data:$().serialize(), 
+            beforeSend: function () {
+                // 禁用按鈕防止重複提交
+                document.querySelector("#SP_03").textContent = '讀取中請稍後';
+                $("#SP_03").attr({ disabled: "disabled" });
+            },
+            success(data){                          
+                var data = eval(data);
+                // 抓取要寫入的格
+                var VCP = document.getElementById('VCP_from'); 
+                // 呼叫建立資料方法 
+                getDataRow(data);        
+    
+                function getDataRow(data){ 
+                    // console.log(data);
+                    for(var i = 0; i < 21; i++){
+                        console.log(getStr(data[i][0]));
+                        var row = document.createElement('tr'); //建立row 
+    
+                        var ACell = document.createElement('td'); //建立第一列
+                        ACell.innerText = data[i][1]; //設定資料
+                        row.appendChild(ACell);//加入資料
+    
+                        var BCell = document.createElement('td'); //建立第2列 
+                        var to_nameCell = document.createElement('a'); //建立a標籤
+                        var to_nameText = document.createTextNode(data[i][0]); //建立a標籤文字
+    
+                        to_nameCell.setAttribute('href','/'+'SP_03/'+getStr(data[i][0])); //將href加入標籤
+                        to_nameCell.setAttribute('class','btn-outline-warning'); //將href加入標籤
+                        to_nameCell.setAttribute('target','_blank'); //開新視窗
+                        to_nameCell.appendChild(to_nameText); //將文字append到標籤
+    
+                        BCell.appendChild(to_nameCell); //將標籤append到td
+                        row.appendChild(BCell); //將td append到 tr
+    
+                        var CCell = document.createElement('td');//建立第3  
+                        CCell.innerHTML = data[i][2];
+                        row.appendChild(CCell); 
+                        var DCell = document.createElement('td');//建立第4 
+                        DCell.innerHTML = data[i][3];
+                        row.appendChild(DCell); 
+                        var ECell = document.createElement('td');//建立第5
+                        ECell.innerHTML = data[i][4]; 
+                        row.appendChild(ECell); 
+                        var FCell = document.createElement('td');//建立第6
+                        FCell.innerHTML = data[i][5];
+                        row.appendChild(FCell); 
+                        var GCell = document.createElement('td');//建立第7
+                        GCell.innerHTML = data[i][6];
+                        row.appendChild(GCell); 
+                        console.log(row);
+                    VCP.appendChild(row); 
+                    document.querySelector("#SP_03").textContent = '強力買入';
+                    $("#SP_03").removeAttr("disabled");
+                    }
+                }}
+            })
+        }else{
+            document.querySelector("#SP_03").textContent = '強力買入';
+            $("#SP_03").removeAttr("disabled");
+        }
+        return false;
+    }
+</script>
+
+
+<!-- VCP(SPK_4)(買入) -->
+<script>
+    let cont_04 = 0;
+    function check_VCP_2(){
+            console.log(cont_04);
+            
+            if(cont_04 == 0){
+            cont_04 ++;
+            
+            $.ajax({
+                type: "post", // 以post方式發起請求
+                url: "/SPK_4", // 你的請求鏈接
+                data:$().serialize(), 
+                beforeSend: function () {
+                    // 禁用按鈕防止重複提交
+                    document.querySelector("#SP_04").textContent = '讀取中請稍後';
+                    $("#SP_04").attr({ disabled: "disabled" });
+                },
+                success(data){                          
+                    var data = eval(data);
+                    // 抓取要寫入的格
+                    var VCP = document.getElementById('VCP_from_02'); 
+                    // 呼叫建立資料方法 
+                    getDataRow(data);        
+        
+                    function getDataRow(data){ 
+                        // console.log(data);
+                        for(var i = 0; i < 21; i++){
+                            console.log(getStr(data[i][0]));
+                            var row = document.createElement('tr'); //建立row 
+        
+                            var ACell = document.createElement('td'); //建立第一列
+                            ACell.innerText = data[i][1]; //設定資料
+                            row.appendChild(ACell);//加入資料
+        
+                            var BCell = document.createElement('td'); //建立第2列 
+                            var to_nameCell = document.createElement('a'); //建立a標籤
+                            var to_nameText = document.createTextNode(data[i][0]); //建立a標籤文字
+        
+                            to_nameCell.setAttribute('href','/'+'SP_03/'+getStr(data[i][0])); //將href加入標籤
+                            to_nameCell.setAttribute('class','btn-outline-warning'); //將href加入標籤
+                            to_nameCell.setAttribute('target','_blank'); //開新視窗
+                            to_nameCell.appendChild(to_nameText); //將文字append到標籤
+        
+                            BCell.appendChild(to_nameCell); //將標籤append到td
+                            row.appendChild(BCell); //將td append到 tr
+        
+                            var CCell = document.createElement('td');//建立第3  
+                            CCell.innerHTML = data[i][2];
+                            row.appendChild(CCell); 
+                            var DCell = document.createElement('td');//建立第4 
+                            DCell.innerHTML = data[i][3];
+                            row.appendChild(DCell); 
+                            var ECell = document.createElement('td');//建立第5
+                            ECell.innerHTML = data[i][4]; 
+                            row.appendChild(ECell); 
+                            var FCell = document.createElement('td');//建立第6
+                            FCell.innerHTML = data[i][5];
+                            row.appendChild(FCell); 
+                            var GCell = document.createElement('td');//建立第7
+                            GCell.innerHTML = data[i][6];
+                            row.appendChild(GCell); 
+                            console.log(row);
+                        VCP.appendChild(row); 
+                        document.querySelector("#SP_04").textContent = '買入';
+                        $("#SP_04").removeAttr("disabled");
+                        }
+                    }}
+                })
+            }else{
+                document.querySelector("#SP_04").textContent = '買入';
+                $("#SP_04").removeAttr("disabled");
+            }
+            return false;
+        }
+</script>
+
+<!-- VCP(SPK_5)(中立&賣出) -->
+<script>
+    let cont_05 = 0;
+    function check_VCP_3(){
+            console.log(cont_05);
+            
+            if(cont_05 == 0){
+            cont_05 ++;
+            
+            $.ajax({
+                type: "post", // 以post方式發起請求
+                url: "/SPK_5", // 你的請求鏈接
+                data:$().serialize(), 
+                beforeSend: function () {
+                    // 禁用按鈕防止重複提交
+                    document.querySelector("#SP_05").textContent = '讀取中請稍後';
+                    $("#SP_05").attr({ disabled: "disabled" });
+                },
+                success(data){                          
+                    var data = eval(data);
+                    // 抓取要寫入的格
+                    var VCP = document.getElementById('VCP_from_03'); 
+                    // 呼叫建立資料方法 
+                    getDataRow(data);        
+        
+                    function getDataRow(data){ 
+                        // console.log(data);
+                        for(var i = 0; i < 21; i++){
+                            console.log(getStr(data[i][0]));
+                            var row = document.createElement('tr'); //建立row 
+        
+                            var ACell = document.createElement('td'); //建立第一列
+                            ACell.innerText = data[i][1]; //設定資料
+                            row.appendChild(ACell);//加入資料
+        
+                            var BCell = document.createElement('td'); //建立第2列 
+                            var to_nameCell = document.createElement('a'); //建立a標籤
+                            var to_nameText = document.createTextNode(data[i][0]); //建立a標籤文字
+        
+                            to_nameCell.setAttribute('href','/'+'SP_03/'+getStr(data[i][0])); //將href加入標籤
+                            to_nameCell.setAttribute('class','btn-outline-warning'); //將href加入標籤
+                            to_nameCell.setAttribute('target','_blank'); //開新視窗
+                            to_nameCell.appendChild(to_nameText); //將文字append到標籤
+        
+                            BCell.appendChild(to_nameCell); //將標籤append到td
+                            row.appendChild(BCell); //將td append到 tr
+        
+                            var CCell = document.createElement('td');//建立第3  
+                            CCell.innerHTML = data[i][2];
+                            row.appendChild(CCell); 
+                            var DCell = document.createElement('td');//建立第4 
+                            DCell.innerHTML = data[i][3];
+                            row.appendChild(DCell); 
+                            var ECell = document.createElement('td');//建立第5
+                            ECell.innerHTML = data[i][4]; 
+                            row.appendChild(ECell); 
+                            var FCell = document.createElement('td');//建立第6
+                            FCell.innerHTML = data[i][5];
+                            row.appendChild(FCell); 
+                            var GCell = document.createElement('td');//建立第7
+                            GCell.innerHTML = data[i][6];
+                            row.appendChild(GCell); 
+                            console.log(row);
+                        VCP.appendChild(row); 
+                        document.querySelector("#SP_05").textContent = '中立&賣出';
+                        $("#SP_05").removeAttr("disabled");
+                        }
+                    }}
+                })
+            }else{
+                document.querySelector("#SP_05").textContent = '中立&賣出';
+                $("#SP_05").removeAttr("disabled");
+            }
+            return false;
+        }
+</script>
+
+<!-- VCP(SPK_6)(強力賣出) -->
+<script>
+    let cont_06 = 0;
+    function check_VCP_4(){
+            console.log(cont_06);
+            
+            if(cont_06 == 0){
+            cont_06 ++;
+            
+            $.ajax({
+                type: "post", // 以post方式發起請求
+                url: "/SPK_6", // 你的請求鏈接
+                data:$().serialize(), 
+                beforeSend: function () {
+                    // 禁用按鈕防止重複提交
+                    document.querySelector("#SP_06").textContent = '讀取中請稍後';
+                    $("#SP_06").attr({ disabled: "disabled" });
+                },
+                success(data){                          
+                    var data = eval(data);
+                    // 抓取要寫入的格
+                    var VCP = document.getElementById('VCP_from_04'); 
+                    // 呼叫建立資料方法 
+                    getDataRow(data);        
+        
+                    function getDataRow(data){ 
+                        // console.log(data);
+                        for(var i = 0; i < 21; i++){
+                            console.log(getStr(data[i][0]));
+                            var row = document.createElement('tr'); //建立row 
+        
+                            var ACell = document.createElement('td'); //建立第一列
+                            ACell.innerText = data[i][1]; //設定資料
+                            row.appendChild(ACell);//加入資料
+        
+                            var BCell = document.createElement('td'); //建立第2列 
+                            var to_nameCell = document.createElement('a'); //建立a標籤
+                            var to_nameText = document.createTextNode(data[i][0]); //建立a標籤文字
+        
+                            to_nameCell.setAttribute('href','/'+'SP_03/'+getStr(data[i][0])); //將href加入標籤
+                            to_nameCell.setAttribute('class','btn-outline-warning'); //將href加入標籤
+                            to_nameCell.setAttribute('target','_blank'); //開新視窗
+                            to_nameCell.appendChild(to_nameText); //將文字append到標籤
+        
+                            BCell.appendChild(to_nameCell); //將標籤append到td
+                            row.appendChild(BCell); //將td append到 tr
+        
+                            var CCell = document.createElement('td');//建立第3  
+                            CCell.innerHTML = data[i][2];
+                            row.appendChild(CCell); 
+                            var DCell = document.createElement('td');//建立第4 
+                            DCell.innerHTML = data[i][3];
+                            row.appendChild(DCell); 
+                            var ECell = document.createElement('td');//建立第5
+                            ECell.innerHTML = data[i][4]; 
+                            row.appendChild(ECell); 
+                            var FCell = document.createElement('td');//建立第6
+                            FCell.innerHTML = data[i][5];
+                            row.appendChild(FCell); 
+                            var GCell = document.createElement('td');//建立第7
+                            GCell.innerHTML = data[i][6];
+                            row.appendChild(GCell); 
+                            console.log(row);
+                        VCP.appendChild(row); 
+                        document.querySelector("#SP_06").textContent = '強力賣出';
+                        $("#SP_06").removeAttr("disabled");
+                        }
+                    }}
+                })
+            }else{
+                document.querySelector("#SP_06").textContent = '強力賣出';
+                $("#SP_06").removeAttr("disabled");
+            }
+            return false;
+        }
+</script>
+
+<!-- RSI(RSI_1)(超買) -->
+<script>
+    let cont_07 = 0;
+    function check_RSI_1(){
+            console.log(cont_07);
+            
+            if(cont_07 == 0){
+            cont_07 ++;
+            
+            $.ajax({
+                type: "post", // 以post方式發起請求
+                url: "/RSI_1", // 你的請求鏈接
+                data:$().serialize(), 
+                beforeSend: function () {
+                    // 禁用按鈕防止重複提交
+                    document.querySelector("#RSI_1").textContent = '讀取中請稍後';
+                    $("#RSI_1").attr({ disabled: "disabled" });
+                },
+                success(data){                          
+                    var data = eval(data);
+                    // 抓取要寫入的格
+                    var RSI = document.getElementById('RSI_from_1'); 
+                    // 呼叫建立資料方法 
+                    getDataRow(data);        
+        
+                    function getDataRow(data){ 
+                        // console.log(data);
+                        for(var i = 0; i < 21; i++){
+                            console.log(getStr(data[i][0]));
+                            var row = document.createElement('tr'); //建立row 
+        
+                            var ACell = document.createElement('td'); //建立第一列
+                            ACell.innerText = data[i][1]; //設定資料
+                            row.appendChild(ACell);//加入資料
+        
+                            var BCell = document.createElement('td'); //建立第2列 
+                            var to_nameCell = document.createElement('a'); //建立a標籤
+                            var to_nameText = document.createTextNode(data[i][0]); //建立a標籤文字
+        
+                            to_nameCell.setAttribute('href','/'+'SP_03/'+getStr(data[i][0])); //將href加入標籤
+                            to_nameCell.setAttribute('class','btn-outline-warning'); //將href加入標籤
+                            to_nameCell.setAttribute('target','_blank'); //開新視窗
+                            to_nameCell.appendChild(to_nameText); //將文字append到標籤
+        
+                            BCell.appendChild(to_nameCell); //將標籤append到td
+                            row.appendChild(BCell); //將td append到 tr
+        
+                            var CCell = document.createElement('td');//建立第3  
+                            CCell.innerHTML = data[i][2];
+                            row.appendChild(CCell); 
+                            var DCell = document.createElement('td');//建立第4 
+                            DCell.innerHTML = data[i][3];
+                            row.appendChild(DCell); 
+                            var ECell = document.createElement('td');//建立第5
+                            ECell.innerHTML = data[i][4]; 
+                            row.appendChild(ECell); 
+                            var FCell = document.createElement('td');//建立第6
+                            FCell.innerHTML = data[i][5];
+                            row.appendChild(FCell); 
+                            var GCell = document.createElement('td');//建立第7
+                            GCell.innerHTML = data[i][6];
+                            row.appendChild(GCell); 
+                            console.log(row);
+                        RSI.appendChild(row); 
+                        document.querySelector("#RSI_1").textContent = 'RSI 超買區';
+                        $("#RSI_1").removeAttr("disabled");
+                        }
+                    }}
+                })
+            }else{
+                document.querySelector("#RSI_1").textContent = 'RSI 超買區';
+                $("#RSI_1").removeAttr("disabled");
+            }
+            return false;
+        }
+</script>
+
+<!-- RSI(RSI_1_2)(超賣) -->
+<script>
+    let cont_11 = 0;
+    function check_RSI_1_2(){
+            console.log(cont_11);
+            
+            if(cont_11 == 0){
+            cont_11 ++;
+            
+            $.ajax({
+                type: "post", // 以post方式發起請求
+                url: "/RSI_1_2", // 你的請求鏈接
+                data:$().serialize(), 
+                beforeSend: function () {
+                    // 禁用按鈕防止重複提交
+                    document.querySelector("#RSI_1_2").textContent = '讀取中請稍後';
+                    $("#RSI_1_2").attr({ disabled: "disabled" });
+                },
+                success(data){                          
+                    var data = eval(data);
+                    // 抓取要寫入的格
+                    var RSI_1_2 = document.getElementById('RSI_from_1_2'); 
+                    // 呼叫建立資料方法 
+                    getDataRow(data);        
+        
+                    function getDataRow(data){ 
+                        // console.log(data);
+                        for(var i = 0; i < 21; i++){
+                            console.log(getStr(data[i][0]));
+                            var row = document.createElement('tr'); //建立row 
+        
+                            var ACell = document.createElement('td'); //建立第一列
+                            ACell.innerText = data[i][1]; //設定資料
+                            row.appendChild(ACell);//加入資料
+        
+                            var BCell = document.createElement('td'); //建立第2列 
+                            var to_nameCell = document.createElement('a'); //建立a標籤
+                            var to_nameText = document.createTextNode(data[i][0]); //建立a標籤文字
+        
+                            to_nameCell.setAttribute('href','/'+'SP_03/'+getStr(data[i][0])); //將href加入標籤
+                            to_nameCell.setAttribute('class','btn-outline-warning'); //將href加入標籤
+                            to_nameCell.setAttribute('target','_blank'); //開新視窗
+                            to_nameCell.appendChild(to_nameText); //將文字append到標籤
+        
+                            BCell.appendChild(to_nameCell); //將標籤append到td
+                            row.appendChild(BCell); //將td append到 tr
+        
+                            var CCell = document.createElement('td');//建立第3  
+                            CCell.innerHTML = data[i][2];
+                            row.appendChild(CCell); 
+                            var DCell = document.createElement('td');//建立第4 
+                            DCell.innerHTML = data[i][3];
+                            row.appendChild(DCell); 
+                            var ECell = document.createElement('td');//建立第5
+                            ECell.innerHTML = data[i][4]; 
+                            row.appendChild(ECell); 
+                            var FCell = document.createElement('td');//建立第6
+                            FCell.innerHTML = data[i][5];
+                            row.appendChild(FCell); 
+                            var GCell = document.createElement('td');//建立第7
+                            GCell.innerHTML = data[i][6];
+                            row.appendChild(GCell); 
+                            console.log(row);
+                        RSI_1_2.appendChild(row); 
+                        document.querySelector("#RSI_1_2").textContent = 'RSI 超賣區';
+                        $("#RSI_1_2").removeAttr("disabled");
+                        }
+                    }}
+                })
+            }else{
+                document.querySelector("#RSI_1").textContent = 'RSI 超賣區';
+                $("#RSI_1").removeAttr("disabled");
+            }
+            return false;
+        }
+</script>
+
+<!-- RSI(RSI_2)(前天比) -->
+<script>
+    let cont_08 = 0;
+    function check_RSI_2(){
+            console.log(cont_08);
+            
+            if(cont_08 == 0){
+            cont_08 ++;
+            
+            $.ajax({
+                type: "post", // 以post方式發起請求
+                url: "/RSI_2", // 你的請求鏈接
+                data:$().serialize(), 
+                beforeSend: function () {
+                    // 禁用按鈕防止重複提交
+                    document.querySelector("#RSI_2").textContent = '讀取中請稍後';
+                    $("#RSI_2").attr({ disabled: "disabled" });
+                },
+                success(data){                          
+                    var data = eval(data);
+                    // 抓取要寫入的格
+                    var RSI_2 = document.getElementById('RSI_from_2'); 
+                    // 呼叫建立資料方法 
+                    getDataRow(data);        
+        
+                    function getDataRow(data){ 
+                        // console.log(data);
+                        for(var i = 0; i < 21; i++){
+                            var row = document.createElement('tr'); //建立row 
+        
+                            var ACell = document.createElement('td'); //建立第一列
+                            ACell.innerText = data[i][1]; //設定資料
+                            row.appendChild(ACell);//加入資料
+        
+                            var BCell = document.createElement('td'); //建立第2列 
+                            var to_nameCell = document.createElement('a'); //建立a標籤
+                            var to_nameText = document.createTextNode(data[i][0]); //建立a標籤文字
+        
+                            to_nameCell.setAttribute('href','/'+'SP_03/'+getStr(data[i][0])); //將href加入標籤
+                            to_nameCell.setAttribute('class','btn-outline-warning'); //將href加入標籤
+                            to_nameCell.setAttribute('target','_blank'); //開新視窗
+                            to_nameCell.appendChild(to_nameText); //將文字append到標籤
+        
+                            BCell.appendChild(to_nameCell); //將標籤append到td
+                            row.appendChild(BCell); //將td append到 tr
+        
+                            var CCell = document.createElement('td');//建立第3  
+                            CCell.innerHTML = data[i][2];
+                            row.appendChild(CCell); 
+                            var DCell = document.createElement('td');//建立第4 
+                            DCell.innerHTML = data[i][3];
+                            row.appendChild(DCell); 
+                            var ECell = document.createElement('td');//建立第5
+                            ECell.innerHTML = data[i][4]; 
+                            row.appendChild(ECell); 
+                            var FCell = document.createElement('td');//建立第6
+                            FCell.innerHTML = data[i][5];
+                            row.appendChild(FCell); 
+                            var GCell = document.createElement('td');//建立第7
+                            GCell.innerHTML = data[i][6];
+                            row.appendChild(GCell); 
+                            console.log(row);
+                        RSI_2.appendChild(row); 
+                        document.querySelector("#RSI_2").textContent = 'RSI黃金交叉';
+                        $("#RSI_2").removeAttr("disabled");
+                        }
+                    }}
+                })
+                }else{
+                    document.querySelector("#RSI_2").textContent = 'RSI黃金交叉';
+                    $("#RSI_2").removeAttr("disabled");
+                }
+                return false;
+            }
+</script>
+
+<!-- JDK(JDK_1)(超買) -->
+<script>
+    let cont_09 = 0;
+    function check_JDK_1(){
+            console.log(cont_09);
+            
+            if(cont_09 == 0){
+            cont_09 ++;
+            
+            $.ajax({
+                type: "post", // 以post方式發起請求
+                url: "/JDK_1", // 你的請求鏈接
+                data:$().serialize(), 
+                beforeSend: function () {
+                    // 禁用按鈕防止重複提交
+                    document.querySelector("#JDK_1").textContent = '讀取中請稍後';
+                    $("#JDK_1").attr({ disabled: "disabled" });
+                },
+                success(data){                          
+                    var data = eval(data);
+                    // 抓取要寫入的格
+                    var JDK = document.getElementById('JDK_from_1'); 
+                    // 呼叫建立資料方法 
+                    getDataRow(data);        
+        
+                    function getDataRow(data){ 
+                        // console.log(data);
+                        for(var i = 0; i < 21; i++){
+                            console.log(getStr(data[i][0]));
+                            var row = document.createElement('tr'); //建立row 
+        
+                            var ACell = document.createElement('td'); //建立第一列
+                            ACell.innerText = data[i][1]; //設定資料
+                            row.appendChild(ACell);//加入資料
+        
+                            var BCell = document.createElement('td'); //建立第2列 
+                            var to_nameCell = document.createElement('a'); //建立a標籤
+                            var to_nameText = document.createTextNode(data[i][0]); //建立a標籤文字
+        
+                            to_nameCell.setAttribute('href','/'+'SP_03/'+getStr(data[i][0])); //將href加入標籤
+                            to_nameCell.setAttribute('class','btn-outline-warning'); //將href加入標籤
+                            to_nameCell.setAttribute('target','_blank'); //開新視窗
+                            to_nameCell.appendChild(to_nameText); //將文字append到標籤
+        
+                            BCell.appendChild(to_nameCell); //將標籤append到td
+                            row.appendChild(BCell); //將td append到 tr
+        
+                            var CCell = document.createElement('td');//建立第3  
+                            CCell.innerHTML = data[i][2];
+                            row.appendChild(CCell); 
+                            var DCell = document.createElement('td');//建立第4 
+                            DCell.innerHTML = data[i][3];
+                            row.appendChild(DCell); 
+                            var ECell = document.createElement('td');//建立第5
+                            ECell.innerHTML = data[i][4]; 
+                            row.appendChild(ECell); 
+                            var FCell = document.createElement('td');//建立第6
+                            FCell.innerHTML = data[i][5];
+                            row.appendChild(FCell); 
+                            var GCell = document.createElement('td');//建立第7
+                            GCell.innerHTML = data[i][6];
+                            row.appendChild(GCell); 
+                            console.log(row);
+                        JDK.appendChild(row); 
+                        document.querySelector("#JDK_1").textContent = 'KDJ 超買區';
+                        $("#JDK_1").removeAttr("disabled");
+                        }
+                    }}
+                })
+            }else{
+                document.querySelector("#JDK_1").textContent = 'KDJ 超買區';
+                $("#JDK_1").removeAttr("disabled");
+            }
+            return false;
+        }
+</script>
+
+<!-- JDK(JDK_1_2)(超賣) -->
+<script>
+    let cont_12 = 0;
+    function check_JDK_1_2(){
+            console.log(cont_12);
+            
+            if(cont_12 == 0){
+            cont_12 ++;
+            
+            $.ajax({
+                type: "post", // 以post方式發起請求
+                url: "/JDK_1_2", // 你的請求鏈接
+                data:$().serialize(), 
+                beforeSend: function () {
+                    // 禁用按鈕防止重複提交
+                    document.querySelector("#JDK_1_2").textContent = '讀取中請稍後';
+                    $("#JDK_1_2").attr({ disabled: "disabled" });
+                },
+                success(data){                          
+                    var data = eval(data);
+                    // 抓取要寫入的格
+                    var JDK = document.getElementById('JDK_from_1_2'); 
+                    // 呼叫建立資料方法 
+                    getDataRow(data);        
+        
+                    function getDataRow(data){ 
+                        // console.log(data);
+                        for(var i = 0; i < 21; i++){
+                            console.log(getStr(data[i][0]));
+                            var row = document.createElement('tr'); //建立row 
+        
+                            var ACell = document.createElement('td'); //建立第一列
+                            ACell.innerText = data[i][1]; //設定資料
+                            row.appendChild(ACell);//加入資料
+        
+                            var BCell = document.createElement('td'); //建立第2列 
+                            var to_nameCell = document.createElement('a'); //建立a標籤
+                            var to_nameText = document.createTextNode(data[i][0]); //建立a標籤文字
+        
+                            to_nameCell.setAttribute('href','/'+'SP_03_2/'+getStr(data[i][0])); //將href加入標籤
+                            to_nameCell.setAttribute('class','btn-outline-warning'); //將href加入標籤
+                            to_nameCell.setAttribute('target','_blank'); //開新視窗
+                            to_nameCell.appendChild(to_nameText); //將文字append到標籤
+        
+                            BCell.appendChild(to_nameCell); //將標籤append到td
+                            row.appendChild(BCell); //將td append到 tr
+        
+                            var CCell = document.createElement('td');//建立第3  
+                            CCell.innerHTML = data[i][2];
+                            row.appendChild(CCell); 
+                            var DCell = document.createElement('td');//建立第4 
+                            DCell.innerHTML = data[i][3];
+                            row.appendChild(DCell); 
+                            var ECell = document.createElement('td');//建立第5
+                            ECell.innerHTML = data[i][4]; 
+                            row.appendChild(ECell); 
+                            var FCell = document.createElement('td');//建立第6
+                            FCell.innerHTML = data[i][5];
+                            row.appendChild(FCell); 
+                            var GCell = document.createElement('td');//建立第7
+                            GCell.innerHTML = data[i][6];
+                            row.appendChild(GCell); 
+                            console.log(row);
+                        JDK.appendChild(row); 
+                        document.querySelector("#JDK_1_2").textContent = 'KDJ 超賣區';
+                        $("#JDK_1_2").removeAttr("disabled");
+                        }
+                    }}
+                })
+            }else{
+                document.querySelector("#JDK_1_2").textContent = 'KDJ 超賣區';
+                $("#JDK_1_2").removeAttr("disabled");
+            }
+            return false;
+        }
+</script>
+
+<!-- JDK(JDK_2)(前天比) -->
+<script>
+    let cont_10 = 0;
+    function check_JDK_2(){
+            console.log(cont_10);
+            
+            if(cont_10 == 0){
+            cont_10 ++;
+            
+            $.ajax({
+                type: "post", // 以post方式發起請求
+                url: "/JDK_2", // 你的請求鏈接
+                data:$().serialize(), 
+                beforeSend: function () {
+                    // 禁用按鈕防止重複提交
+                    document.querySelector("#JDK_2").textContent = '讀取中請稍後';
+                    $("#JDK_2").attr({ disabled: "disabled" });
+                },
+                success(data){                          
+                    var data = eval(data);
+                    // 抓取要寫入的格
+                    var JDK_2 = document.getElementById('JDK_from_2'); 
+                    // 呼叫建立資料方法 
+                    getDataRow(data);        
+        
+                    function getDataRow(data){ 
+                        // console.log(data);
+                        for(var i = 0; i < 21; i++){
+                            var row = document.createElement('tr'); //建立row 
+        
+                            var ACell = document.createElement('td'); //建立第一列
+                            ACell.innerText = data[i][1]; //設定資料
+                            row.appendChild(ACell);//加入資料
+        
+                            var BCell = document.createElement('td'); //建立第2列 
+                            var to_nameCell = document.createElement('a'); //建立a標籤
+                            var to_nameText = document.createTextNode(data[i][0]); //建立a標籤文字
+        
+                            to_nameCell.setAttribute('href','/'+'SP_03/'+getStr(data[i][0])); //將href加入標籤
+                            to_nameCell.setAttribute('class','btn-outline-warning'); //將href加入標籤
+                            to_nameCell.setAttribute('target','_blank'); //開新視窗
+                            to_nameCell.appendChild(to_nameText); //將文字append到標籤
+        
+                            BCell.appendChild(to_nameCell); //將標籤append到td
+                            row.appendChild(BCell); //將td append到 tr
+        
+                            var CCell = document.createElement('td');//建立第3  
+                            CCell.innerHTML = data[i][2];
+                            row.appendChild(CCell); 
+                            var DCell = document.createElement('td');//建立第4 
+                            DCell.innerHTML = data[i][3];
+                            row.appendChild(DCell); 
+                            var ECell = document.createElement('td');//建立第5
+                            ECell.innerHTML = data[i][4]; 
+                            row.appendChild(ECell); 
+                            var FCell = document.createElement('td');//建立第6
+                            FCell.innerHTML = data[i][5];
+                            row.appendChild(FCell); 
+                            var GCell = document.createElement('td');//建立第7
+                            GCell.innerHTML = data[i][6];
+                            row.appendChild(GCell); 
+                            console.log(row);
+                        JDK_2.appendChild(row); 
+                        document.querySelector("#JDK_2").textContent = 'KDJ 黃金交叉';
+                        $("#JDK_2").removeAttr("disabled");
+                        }
+                    }}
+                })
+            }else{
+                document.querySelector("#JDK_2").textContent = 'KDJ 黃金交叉';
+                $("#JDK_2").removeAttr("disabled");
+            }
+            return false;
+        }
+</script>
+
+
+<!-- MACD(多方) -->
+<script>
+    let cont_13 = 0;
+    function check_MACD_1(){
+            console.log(cont_13);
+            
+            if(cont_13 == 0){
+            cont_13 ++;
+            
+            $.ajax({
+                type: "post", // 以post方式發起請求
+                url: "/MACD_1", // 你的請求鏈接
+                data:$().serialize(), 
+                beforeSend: function () {
+                    // 禁用按鈕防止重複提交
+                    document.querySelector("#MACD_1").textContent = '讀取中請稍後';
+                    $("#MACD_1").attr({ disabled: "disabled" });
+                },
+                success(data){                          
+                    var data = eval(data);
+                    // 抓取要寫入的格
+                    var MACD_1 = document.getElementById('MACD_from_1'); 
+                    // 呼叫建立資料方法 
+                    getDataRow(data);        
+        
+                    function getDataRow(data){ 
+                        // console.log(data);
+                        for(var i = 0; i < 21; i++){
+                            var row = document.createElement('tr'); //建立row 
+        
+                            var ACell = document.createElement('td'); //建立第一列
+                            ACell.innerText = data[i][1]; //設定資料
+                            row.appendChild(ACell);//加入資料
+        
+                            var BCell = document.createElement('td'); //建立第2列 
+                            var to_nameCell = document.createElement('a'); //建立a標籤
+                            var to_nameText = document.createTextNode(data[i][0]); //建立a標籤文字
+        
+                            to_nameCell.setAttribute('href','/'+'SP_03/'+getStr(data[i][0])); //將href加入標籤
+                            to_nameCell.setAttribute('class','btn-outline-warning'); //將href加入標籤
+                            to_nameCell.setAttribute('target','_blank'); //開新視窗
+                            to_nameCell.appendChild(to_nameText); //將文字append到標籤
+        
+                            BCell.appendChild(to_nameCell); //將標籤append到td
+                            row.appendChild(BCell); //將td append到 tr
+        
+                            var CCell = document.createElement('td');//建立第3  
+                            CCell.innerHTML = data[i][2];
+                            row.appendChild(CCell); 
+                            var DCell = document.createElement('td');//建立第4 
+                            DCell.innerHTML = data[i][3];
+                            row.appendChild(DCell); 
+                            var ECell = document.createElement('td');//建立第5
+                            ECell.innerHTML = data[i][4]; 
+                            row.appendChild(ECell); 
+                            var FCell = document.createElement('td');//建立第6
+                            FCell.innerHTML = data[i][5];
+                            row.appendChild(FCell); 
+                            var GCell = document.createElement('td');//建立第7
+                            GCell.innerHTML = data[i][6];
+                            row.appendChild(GCell); 
+                            console.log(row);
+                        MACD_1.appendChild(row); 
+                        document.querySelector("#MACD_1").textContent = 'MACD(多方)';
+                        $("#MACD_1").removeAttr("disabled");
+                        }
+                    }}
+                })
+            }else{
+                document.querySelector("#MACD_1").textContent = 'MACD(多方)';
+                $("#MACD_1").removeAttr("disabled");
+            }
+            return false;
+        }
+</script>
+
+<!-- MACD(空方) -->
+<script>
+    let cont_14 = 0;
+    function check_MACD_2(){
+            console.log(cont_14);
+            
+            if(cont_14 == 0){
+            cont_14 ++;
+            
+            $.ajax({
+                type: "post", // 以post方式發起請求
+                url: "/MACD_2", // 你的請求鏈接
+                data:$().serialize(), 
+                beforeSend: function () {
+                    // 禁用按鈕防止重複提交
+                    document.querySelector("#MACD_2").textContent = '讀取中請稍後';
+                    $("#MACD_2").attr({ disabled: "disabled" });
+                },
+                success(data){                          
+                    var data = eval(data);
+                    // 抓取要寫入的格
+                    var MACD_2 = document.getElementById('MACD_from_2'); 
+                    // 呼叫建立資料方法 
+                    getDataRow(data);        
+        
+                    function getDataRow(data){ 
+                        // console.log(data);
+                        for(var i = 0; i < 21; i++){
+                            var row = document.createElement('tr'); //建立row 
+        
+                            var ACell = document.createElement('td'); //建立第一列
+                            ACell.innerText = data[i][1]; //設定資料
+                            row.appendChild(ACell);//加入資料
+        
+                            var BCell = document.createElement('td'); //建立第2列 
+                            var to_nameCell = document.createElement('a'); //建立a標籤
+                            var to_nameText = document.createTextNode(data[i][0]); //建立a標籤文字
+        
+                            to_nameCell.setAttribute('href','/'+'SP_03/'+getStr(data[i][0])); //將href加入標籤
+                            to_nameCell.setAttribute('class','btn-outline-warning'); //將href加入標籤
+                            to_nameCell.setAttribute('target','_blank'); //開新視窗
+                            to_nameCell.appendChild(to_nameText); //將文字append到標籤
+        
+                            BCell.appendChild(to_nameCell); //將標籤append到td
+                            row.appendChild(BCell); //將td append到 tr
+        
+                            var CCell = document.createElement('td');//建立第3  
+                            CCell.innerHTML = data[i][2];
+                            row.appendChild(CCell); 
+                            var DCell = document.createElement('td');//建立第4 
+                            DCell.innerHTML = data[i][3];
+                            row.appendChild(DCell); 
+                            var ECell = document.createElement('td');//建立第5
+                            ECell.innerHTML = data[i][4]; 
+                            row.appendChild(ECell); 
+                            var FCell = document.createElement('td');//建立第6
+                            FCell.innerHTML = data[i][5];
+                            row.appendChild(FCell); 
+                            var GCell = document.createElement('td');//建立第7
+                            GCell.innerHTML = data[i][6];
+                            row.appendChild(GCell); 
+                            console.log(row);
+                        MACD_2.appendChild(row); 
+                        document.querySelector("#MACD_2").textContent = 'MACD(空方)';
+                        $("#MACD_2").removeAttr("disabled");
+                        }
+                    }}
+                })
+            }else{
+                document.querySelector("#MACD_2").textContent = 'MACD(空方)';
+                $("#MACD_2").removeAttr("disabled");
+            }
+            return false;
+        }
+</script>
+
+
+
+<!-- 熱度圖 -->
+<script>
+    var width = $("#treemap").width(); 
+    var height = $("#treemap").height(); 
+    $(document).ready(function(){
+        $(".plot-container").css("width", width).css("height", height);
+    })
+</script>
+
+<script>
+
+    d={{ graphJSON | safe }};
+    console.log(d);
+    Plotly.newPlot('treemap', d, {})
+
+    // var layout = {
+    //     autosize: false,
+    //     width: 500,
+    //     height: 500,
+    //     margin: {
+    //         l: 50,
+    //         r: 50,
+    //         b: 100,
+    //         t: 100,
+    //         pad: 4
+    //     },
+    // };
+
+    function cb(){
+        $.getJSON({
+        url:'/widget',success : function(result){
+        Plotly.newPlot('treemap',result);
+        }
+        });
+    }  
+
+</script>
+{% endblock %}

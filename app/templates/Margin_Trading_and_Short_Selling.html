@@ -1,0 +1,444 @@
+{% extends 'parts/to_name.html' %}
+
+
+{% block Ranking %}
+<!-- 融資融券排行 -->
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="bg-secondary rounded p-4" >
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <h6 class="mb-0" id="loding">融資融券</h6>
+                </div>              
+                <div class="alert alert-info mb-4" role="alert">
+                  <p style="margin-bottom: 0;">
+                    融資－跟券商借錢：做多，買進股票<br>
+                    融券－跟券商借股票：做空，賣出股票<br>
+                    藉由判讀一檔股票的資券變化來說明其所代表的意義<br>
+                    (* 券資比達30%以上，尬空機率增加)
+                  </p>
+                </div>
+                <div class="table-responsive">
+                  <table id="Margin_Trading_and_Short_Selling" class="table table-bordered border-light mb-0" style="text-align: center; line-height:35px;">
+                      <thead class="table-light">
+                          <tr>
+                              <th scope="col">日期</th>
+                              <th scope="col">融資增加</th>
+                              <th scope="col">融資餘額</th>
+                              <th scope="col">融資使用率</th>
+                              <th scope="col">融券增加</th>
+                              <th scope="col">融券餘額</th>
+                              <th scope="col">融券使用率</th>
+                              <th scope="col">資券互抵</th>
+                              <th scope="col">資券當沖</th>
+                              <th scope="col">券資比</th>
+                              <th scope="col">價格</th>
+                              <th scope="col">比例</th>
+                              <th scope="col">成交量</th>
+                          </tr>
+                      </thead>
+                      <tbody id="tb">
+
+                      </tbody>
+                  </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script  type="text/javascript">
+
+    //取得網址字串
+    var url = location.href;
+    //分割字串把分割後的字串放進陣列中
+    var ary1 = url.split('/');
+    //取得name值
+    var url_name = ary1[ary1.length-1]
+    
+    var myChart = echarts.init(document.getElementById('K_line'), 'dark');
+    // , 'dark' 為暗色版
+    var option;
+
+    const upColor = '#00da3c';
+    const downColor = '#ec0000';
+
+    // k_line資料預處理函式建立
+    function splitData(rawData) {
+        let categoryData = [];
+        let values = [];
+        let volumes = [];
+        let name = [];
+        for (let i = 0; i < rawData.length; i++) {
+            name.push(rawData[i].splice(0, 1)[0]);
+            categoryData.push(rawData[i].splice(0, 1)[0]);
+            values.push(rawData[i]);
+            volumes.push([i, rawData[i][4], rawData[i][0] > rawData[i][1] ? 1 : -1]);
+        }
+        return {
+            categoryData: categoryData,
+            values: values,
+            volumes: volumes,
+            name: name
+        };
+    }
+            
+    // MA計算函式建立
+    function calculateMA(dayCount, data) {
+    var result = [];
+    for (var i = 0, len = data.values.length; i < len; i++) {
+        if (i < dayCount) {
+            result.push('-');
+            continue;
+        }
+        var sum = 0;
+        for (var j = 0; j < dayCount; j++) {
+            sum += data.values[i - j][1];
+        }
+        result.push(+(sum / dayCount).toFixed(3));
+    }
+    return result;
+    }
+    
+    // 預設頁面: 發送ajax請求，從後台獲取json數據
+    $(document).ready(function () {  
+        getData_Kline();
+        MTaSS();
+    });
+    
+    // 以下為K_line
+    function getData_Kline() {
+        $.ajax({
+        
+        url:'/K_line',
+        data:{name:url_name},
+        type:'POST',
+        async:false,
+        dataType:'json',
+        
+        success:function(data) {
+        // 成功取得資料後進行資料預處理
+        var data = splitData(data);
+
+        // 開始繪圖
+        myChart.setOption(
+            (option = {
+              
+              animation: false,
+              // title: {
+              //   text: 'K_line'
+              // },
+              legend: {
+                bottom: 10,
+                left: 'center',
+                data: [data.name[0], 'MA5', 'MA10', 'MA20', 'MA30']
+              },
+              tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                  type: 'cross'
+                },
+                borderWidth: 1,
+                borderColor: '#ccc',
+                padding: 10,
+                textStyle: {
+                  color: '#000'
+                },
+                position: function (pos, params, el, elRect, size) {
+                  const obj = {
+                    top: 10
+                  };
+                  obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
+                  return obj;
+                }
+                // extraCssText: 'width: 170px'
+              },
+              axisPointer: {
+                link: [
+                  {
+                    xAxisIndex: 'all'
+                  }
+                ],
+                label: {
+                  backgroundColor: '#777'
+                }
+              },
+              toolbox: {
+                feature: {
+                  dataZoom: {
+                    yAxisIndex: false
+                  },
+                  brush: {
+                    type: ['lineX', 'clear']
+                  }
+                }
+              },
+              brush: {
+                xAxisIndex: 'all',
+                brushLink: 'all',
+                outOfBrush: {
+                  colorAlpha: 0.1
+                }
+              },
+              visualMap: {
+                show: false,
+                seriesIndex: 5,
+                dimension: 2,
+                pieces: [
+                  {
+                    value: 1,
+                    color: downColor
+                  },
+                  {
+                    value: -1,
+                    color: upColor
+                  }
+                ]
+              },
+              grid: [
+                {
+                  left: '10%',
+                  right: '8%',
+                  height: '50%'
+                },
+                {
+                  left: '10%',
+                  right: '8%',
+                  top: '63%',
+                  height: '16%'
+                }
+              ],
+              xAxis: [
+                {
+                  type: 'category',
+                  data: data.categoryData,
+                  boundaryGap: false,
+                  axisLine: { onZero: false },
+                  splitLine: { show: false },
+                  min: 'dataMin',
+                  max: 'dataMax',
+                  axisPointer: {
+                    z: 100
+                  }
+                },
+                {
+                  type: 'category',
+                  gridIndex: 1,
+                  data: data.categoryData,
+                  boundaryGap: false,
+                  axisLine: { onZero: false },
+                  axisTick: { show: false },
+                  splitLine: { show: false },
+                  axisLabel: { show: false },
+                  min: 'dataMin',
+                  max: 'dataMax'
+                }
+              ],
+              yAxis: [
+                {
+                  scale: true,
+                  splitArea: {
+                    show: true
+                  }
+                },
+                {
+                  scale: true,
+                  gridIndex: 1,
+                  splitNumber: 2,
+                  axisLabel: { show: false },
+                  axisLine: { show: false },
+                  axisTick: { show: false },
+                  splitLine: { show: false }
+                }
+              ],
+              // 下方橫條設定
+              dataZoom: [
+                {
+                  type: 'inside',
+                  xAxisIndex: [0, 1],
+                  start: 50,
+                  end: 100
+                },
+                {
+                  show: true,
+                  xAxisIndex: [0, 1],
+                  type: 'slider',
+                  top: '85%',
+                  start: 98,
+                  end: 100
+                }
+              ],
+              // 滑鼠移過時顯示的資料設定
+              series: [
+                {
+                  name: data.name[0],
+                  type: 'candlestick',
+                  data: data.values,
+                  itemStyle: {
+                    color: upColor,
+                    color0: downColor,
+                    borderColor: undefined,
+                    borderColor0: undefined
+                  },
+                  tooltip: {
+                    formatter: function (param) {
+                      param = param[0];
+                      return [
+                        'Date: ' + param.name + '<hr size=1 style="margin: 3px 0">',
+                        'Open: ' + param.data[0] + '<br/>',
+                        'Close: ' + param.data[1] + '<br/>',
+                        'Lowest: ' + param.data[2] + '<br/>',
+                        'Highest: ' + param.data[3] + '<br/>'
+                      ].join('');
+                    }
+                  }
+                },
+                {
+                  name: 'MA5',
+                  type: 'line',
+                  data: calculateMA(5, data),
+                  smooth: true,
+                  lineStyle: {
+                    opacity: 0.5
+                  }
+                },
+                {
+                  name: 'MA10',
+                  type: 'line',
+                  data: calculateMA(10, data),
+                  smooth: true,
+                  lineStyle: {
+                    opacity: 0.5
+                  }
+                },
+                {
+                  name: 'MA20',
+                  type: 'line',
+                  data: calculateMA(20, data),
+                  smooth: true,
+                  lineStyle: {
+                    opacity: 0.5
+                  }
+                },
+                {
+                  name: 'MA30',
+                  type: 'line',
+                  data: calculateMA(30, data),
+                  smooth: true,
+                  lineStyle: {
+                    opacity: 0.5
+                  }
+                },
+                {
+                  name: 'Volume',
+                  type: 'bar',
+                  xAxisIndex: 1,
+                  yAxisIndex: 1,
+                  data: data.volumes
+                }
+              ],
+            backgroundColor: '#191C24',
+            }),
+            true
+          )
+        
+        },
+        error:function (msg) {
+        console.log(msg);
+        alert('系統發生錯誤');
+        }
+        })
+        };
+        window.addEventListener("resize",function(){
+        myChart.resize();
+        });
+
+</script>
+<!-- 融資融券 -->
+<script>
+  // 設定計數器cont 讓它不要重複執行抓取表格
+  let cont = 0;
+  function MTaSS(){
+      console.log(cont);
+      // $("#tb").html("");
+    
+    if(cont == 0){
+      cont ++;
+      
+      $.ajax({
+        url:'/MTaSS',
+        data:{name:url_name},
+        type:'POST',
+        async:false,
+        dataType:'json',
+          success(data){                          
+              document.querySelector("#loding").textContent = '讀取中請稍後';
+              var data = eval(data);
+              // 抓取要寫入的格
+              var ByS = document.getElementById('Margin_Trading_and_Short_Selling'); 
+              // 呼叫建立資料方法 
+              getDataRow(data);        
+
+              function getDataRow(data){ 
+                  // console.log(data);
+                  for(var i = 0; i < 21; i++){
+                      var row = document.createElement('tr'); //建立row 
+
+                      var ACell = document.createElement('td'); //建立第一列
+                      ACell.innerText = data[i]['日期']; //設定資料
+                      row.appendChild(ACell);//加入資料
+
+                      var BCell = document.createElement('td'); //建立第2列 
+                      BCell.innerText = data[i]['融資增加']; //設定資料
+                      row.appendChild(BCell); //將td append到 tr
+
+                      var CCell = document.createElement('td');//建立第3  
+                      CCell.innerHTML = data[i]['融資餘額'];
+                      row.appendChild(CCell); 
+
+                      var DCell = document.createElement('td');//建立第4 
+                      DCell.innerHTML = data[i]['融資使用率%']+'%';
+                      row.appendChild(DCell); 
+                      var ECell = document.createElement('td');//建立第5
+                      ECell.innerHTML = data[i]['融券增加']; 
+                      row.appendChild(ECell); 
+                      var FCell = document.createElement('td');//建立第6
+                      FCell.innerHTML = data[i]['融券餘額'];
+                      row.appendChild(FCell); 
+                      var GCell = document.createElement('td');//建立第7
+                      GCell.innerHTML = data[i]['融券使用率%']+'%';
+                      row.appendChild(GCell); 
+                      var HCell = document.createElement('td');//建立第8
+                      HCell.innerHTML = data[i]['資券互抵(張)']+'張';
+                      row.appendChild(HCell); 
+                      var ICell = document.createElement('td');//建立第9
+                      ICell.innerHTML = data[i]['資券當沖(%)']+'%';
+                      row.appendChild(ICell); 
+                      var JCell = document.createElement('td');//建立第10
+                      JCell.innerHTML = data[i]['券資比(%)']+'%';
+                      row.appendChild(JCell); 
+                      var KCell = document.createElement('td');//建立第11
+                      KCell.innerHTML = data[i]['價格'];
+                      row.appendChild(KCell); 
+                      var LCell = document.createElement('td');//建立第12
+                      LCell.innerHTML = data[i]['比例'];
+                      row.appendChild(LCell); 
+                      var NCell = document.createElement('td');//建立第13
+                      NCell.innerHTML = data[i]['成交量'];
+                      row.appendChild(NCell); 
+                      console.log(row);
+                  ByS.appendChild(row); 
+                  document.querySelector("#loding").textContent = '融資融券';
+                  }
+              }}
+          })
+      }else{
+          document.querySelector("#loding").textContent = '融資融券-讀取失敗';
+      }
+    return false;
+  }
+</script>
+{% endblock %}

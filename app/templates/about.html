@@ -1,0 +1,352 @@
+{% extends 'parts/base.html' %}
+
+{% block head %}
+<head>
+    <meta charset="utf-8">
+    <title>{{ tiele }}</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="EZ-GU" name="keywords">
+    <meta content="透過七大看股指標互動式圖像化、投資組合評估工具、五項選股推薦、信號預測模型來達到EZ-GU(股)，EZ-GU(顧)的服務目的。" name="description">
+
+    <!-- Favicon -->
+    <link href="/static/img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="/static/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="/static/lib/animate/animate.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="/static/css/bootstrap_a.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="/static/css/style_a.css" rel="stylesheet">
+
+    <!-- Flask -->
+    <script src="https://cdn.bootcss.com/jquery/3.0.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.3/dist/echarts.min.js"></script>
+
+</head>
+{% endblock %}
+
+{% block Spinner %}
+{% endblock %}
+
+{% block dflex %}
+<div class="container-fluid position-relative p-0">
+{% endblock %}
+
+{% block sidebar %}
+{% endblock %}
+
+{% block content %}
+<!-- Navbar & Carousel Start -->
+<div class="container-fluid position-relative p-0">
+    <nav class="navbar navbar-expand-lg navbar-dark px-5 py-3 py-lg-0">
+        <a href="/" class="navbar-brand p-0">
+            <h1 class="m-0">BDSE25-4</h1>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="fa fa-bars"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto py-0">
+                <a href="#" class="nav-item nav-link">TOP</a>
+                <a href="#about" class="nav-item nav-link">About Project</a>
+                <a href="#us" class="nav-item nav-link">About Us</a>
+            </div>
+            <butaton type="button" class="btn text-primary ms-3" data-bs-toggle="modal" data-bs-target="#searchModal" href="/"><i class="bi bi-arrow-right-square-fill"></i></butaton>
+            <a href="/EZ-GU" class="btn btn-primary py-2 px-4 ms-3">前往系統介面</a>
+        </div>
+    </nav>
+
+    <div id="header-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel" >
+        <div class="carousel-inner">
+            <div class="carousel-item active" >
+                <img class="w-100" src="/static/img/carousel-2.jpg" alt="Image" >
+                <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                    <div class="p-3" style="max-width: 900px;">
+                        <h5 class="text-white text-uppercase mb-3 animated slideInDown" style="margin-top: 15px;">[ K線、漲跌幅、布林通道、RSI、MACD、KDJ、OBV ]</h5>
+                        <h1 class="display-1 text-white mb-md-4 animated zoomIn">『七大看股指標』</h1>
+                        <a href="/EZ-GU" class="btn btn-primary py-md-3 px-md-5 mb-md-4 animated slideInLeft">前往頁面</a>
+                        <div class=" py-md-3 px-md-5 animated slideInRight" style="border: solid 1px #fff ; display:inline-block; width: 70% ; margin: 20px; padding: 10px;">透過API及爬蟲技術，取得股票資料並運算/清洗為DF，最後寫入資料庫，讓後端取資料回傳給前端進行呈現。</div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img class="w-100" src="/static/img/carousel-2.jpg" alt="Image">
+                <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                    <div class="p-3" style="max-width: 900px;" >
+                        <h5 class="text-white text-uppercase mb-3 animated slideInDown" style="margin-top: 15px;">[ 組合預期報酬率 & 投資組合市場風險 ]</h5>
+                        <h1 class="display-1 text-white mb-md-4 animated zoomIn">『投資組合評估工具』</h1>
+                        <a href="/form" class="btn btn-primary py-md-3 px-md-5 mb-md-4 animated slideInLeft">前往頁面</a>
+                        <div class=" py-md-3 px-md-5 animated slideInRight" style="border: solid 1px #fff ; display:inline-block; width: 70% ; margin: 20px; padding: 10px;">輸入購買資訊，由前端請求後端取API獲得運算資訊，運算後回傳結果，用於評估投資組合效益。</div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img class="w-100" src="/static/img/carousel-2.jpg" alt="Image">
+                <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                    <div class="p-3" style="max-width: 900px;" >
+                        <h5 class="text-white text-uppercase mb-3 animated slideInDown" style="margin-top: 15px;">[ 資料條件篩選 ]</h5>
+                        <h1 class="display-1 text-white mb-md-4 animated zoomIn">『四項選股推薦』</h1>
+                        <a href="/widget" class="btn btn-primary py-md-3 px-md-5 mb-md-4 animated slideInLeft">前往頁面</a>
+                        <div class=" py-md-3 px-md-5 animated slideInRight" style="border: solid 1px #fff ; display:inline-block; width: 70% ; margin: 20px; padding: 10px;">設置條件「投信購買標的」、「週轉率排行」、「波動收縮規律」、「技術指標」，從資料庫或爬蟲取得符合股票。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#header-carousel"
+            data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#header-carousel"
+            data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</div>
+<!-- Navbar & Carousel End -->
+
+
+<!-- About Start -->
+<div id="about"></div>
+<div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
+    <div class="container py-5">
+        <div class="row g-5">
+            <div class="col-lg-7">
+                <div class="section-title position-relative pb-3 mb-5">
+                    <h5 class="fw-bold text-primary text-uppercase">BDSE25-第四組</h5>
+                    <h1 class="mb-0">EZ-GU 看股選股評估服務</h1>
+                </div>
+                <p class="mb-4" style=" text-align: justify;">市面上充滿著各式各樣的看股工具及其衍生的服務，而這些服務所提供的指標與延伸服務，讓使用者通常需要兼用2~3個工具才能滿足看股的資訊需求量。本專題經由組內兩位股市達人發想，透過以下<span style="color: #0e6c8e; font-weight: 580;">四點服務</span>來達成EZ-GU(股)，EZ-GU(顧)的服務目的，讓單一服務滿足大部分的需求。</p>
+                <div class="row g-0 mb-3">
+                    <div class="col-sm-6 wow zoomIn" data-wow-delay="0.2s">
+                        <h5 class="mb-3"><i class="fa fa-check text-primary me-3"></i>七大看股指標互動式圖像化</h5>
+                        <h5 class="mb-3"><i class="fa fa-check text-primary me-3"></i>投資組合評估工具</h5>
+                    </div>
+                    <div class="col-sm-6 wow zoomIn" data-wow-delay="0.4s">
+                        <h5 class="mb-3"><i class="fa fa-check text-primary me-3"></i>四項選股推薦</h5>
+                        <h5 class="mb-3"><i class="fa fa-check text-primary me-3"></i>信號預測模型</h5>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-4 wow fadeIn" data-wow-delay="0.6s">
+                    <div class="bg-primary d-flex align-items-center justify-content-center rounded" style="width: 80px; height: 60px;">
+                        <div class=" text-uppercase" style="color: #ffff;">實</div>
+                        <div class=" text-uppercase" style="color: #ffff;">做</div>
+                    </div>
+                    <div class="ps-2">
+                        <h6 class="mb-0" tyle=" text-align: justify;">資料爬取/清洗/處理運算、資料庫建置/寫入、Hadoop叢集架設、機器學習模型訓練、後端\資料庫連接、前端\後端連接、前端畫面呈現。</h6>
+                    </div>
+                </div>
+                <a href="/EZ-GU" class="btn btn-primary py-3 px-5 mt-3 wow zoomIn" data-wow-delay="0.9s">觀看成果展示</a>
+            </div>
+            <div class="col-lg-5" style="min-height: 500px;">
+                <div class="position-relative h-100">
+                    <img class="position-absolute w-100 h-100 rounded wow zoomIn" data-wow-delay="0.9s" src="/static/img/about.jpg" style="object-fit: cover;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- About End -->
+
+<div id="us"></div>
+<!-- Team Start -->
+<div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
+    <div class="container py-5">
+        <div class="section-title text-center position-relative pb-3 mb-5 mx-auto" style="max-width: 600px;">
+            <h5 class="fw-bold text-primary text-uppercase">Team Members</h5>
+            <h1 class="mb-0">專題小組成員</h1>
+        </div>
+        <div class="row g-5" style="text-align:center;">
+            <!-- 個人資料 -->
+            <div class="col-lg-4 wow slideInUp" data-wow-delay="0.3s" >
+                <div class="team-item bg-light rounded overflow-hidden" >
+                    <div class="team-img position-relative overflow-hidden">
+                        <img class="img-fluid w-100" src="/static/img/team-1.jpg" alt="" >
+                        <div class="team-social">
+                            <a class="btn btn-lg btn-primary " target="_blank" href="https://drive.google.com/file/d/11Z6wsizetxYH_FKh3pM_so1_8WxllzJX/view?usp=sharing">觀看簡歷</i></a>
+                        </div>
+                    </div>
+                    <div class="text-center py-4">
+                        <h4 class="text-primary">蔡 宜呈</h4>
+                        <p class="text-uppercase m-0">前端/後端工程師</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 個人資料 -->
+            <div class="col-lg-4 wow slideInUp" data-wow-delay="0.6s">
+                <div class="team-item bg-light rounded overflow-hidden">
+                    <div class="team-img position-relative overflow-hidden">
+                        <img class="img-fluid w-100" src="/static/img/team-2.jpg" alt="">
+                        <div class="team-social">
+                            <a class="btn btn-lg btn-primary " target="_blank" href="https://drive.google.com/file/d/1c4Hp5Xq-DXwbzJ2pBN4iYnld3MQoef-Y/view">觀看簡歷</i></a>
+                        </div>
+                    </div>
+                    <div class="text-center py-4">
+                        <h4 class="text-primary">簡 廷安</h4>
+                        <p class="text-uppercase m-0">服務knowhow/資料分析師/系統管理</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 個人資料 -->
+            <div class="col-lg-4 wow slideInUp" data-wow-delay="0.9s">
+                <div class="team-item bg-light rounded overflow-hidden">
+                    <div class="team-img position-relative overflow-hidden">
+                        <img class="img-fluid w-100" src="/static/img/team-4.jpg" alt="">
+                        <div class="team-social">
+                            <a class="btn btn-lg btn-primary " target="_blank" href="https://drive.google.com/file/d/1MN_G70bMAT7WLXAbGctEoPcF32QHgb5h/view?usp=sharing">觀看簡歷</i></a>
+                        </div>
+                    </div>
+                    <div class="text-center py-4">
+                        <h4 class="text-primary">林 侑瑩</h4>
+                        <p class="text-uppercase m-0">資料分析/後端工程師</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row g-5" style="">
+            <!-- 個人資料 -->
+            <div class="col-lg-4 wow slideInUp" data-wow-delay="1.0s">
+                <div class="team-item bg-light rounded overflow-hidden">
+                    <div class="team-img position-relative overflow-hidden">
+                        <img class="img-fluid w-100" src="/static/img/team-5.jpg" alt="">
+                        <div class="team-social">
+                            <a class="btn btn-lg btn-primary " target="_blank" href="https://drive.google.com/file/d/1Yn1_P1Pt3_Eo8X2j9Lc6gqVSytRaOWCb/view?usp=sharing">觀看簡歷</i></a>
+                        </div>
+                    </div>
+                    <div class="text-center py-4">
+                        <h4 class="text-primary">曾 郁芳</h4>
+                        <p class="text-uppercase m-0">資料分析/後端工程師</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 個人資料 -->
+            <div class="col-lg-4 wow slideInUp" data-wow-delay="1.2s">
+                <div class="team-item bg-light rounded overflow-hidden">
+                    <div class="team-img position-relative overflow-hidden">
+                        <img class="img-fluid w-100" src="/static/img/team-3.jpg" alt="">
+                        <div class="team-social">
+                            <a class="btn btn-lg btn-primary " target="_blank" href="https://drive.google.com/file/d/1ZrP6kMTI_H6AaGat3p9JY-0IB4nKk8dz/view?usp=sharing">觀看簡歷</i></a>
+                        </div>
+                    </div>
+                    <div class="text-center py-4">
+                        <h4 class="text-primary">范 書愷</h4>
+                        <p class="text-uppercase m-0">服務knowhow/資料分析師</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Team End -->
+
+<!-- Footer Start -->
+<div class="container-fluid bg-dark text-light mt-5 wow fadeInUp" data-wow-delay="0.1s">
+    <div class="container">
+        <div class="row gx-5">
+            <div class="col-lg-4 col-md-6 footer-about">
+                <div class="d-flex flex-column align-items-center justify-content-center text-center h-100 bg-primary p-4">
+                    <div class="navbar-brand">
+                        <h1 class="m-0 text-white"><i class="bi bi-exclamation-triangle-fill me-2"></i>免責聲明</h1>
+                    </div>
+                    <p class="mt-3 mb-4">此系統之數據、圖表、運算結果等所有產出，皆僅是學術練習用途，不可作為投資等其他所有商業行為之依據或應用。<br><br>若任意使用本專題內容之成果於投資等其他所有商業行為而造成利益損害，我方並不會負任何責任。</p>
+                </div>
+            </div>
+            <div class="col-lg-8 col-md-6">
+                <div class="row gx-5">
+                    <!-- <div class="col-lg-4 col-md-12 pt-5 mb-5">
+                        <div class="section-title section-title-sm position-relative pb-3 mb-4">
+                            <h3 class="text-light mb-0">Get In Touch</h3>
+                        </div>
+                        <div class="d-flex mb-2">
+                            <i class="fa fa-user-tie text-primary me-2 " style="margin-top: 5px;"></i>
+                            <p class="mb-0">蔡 宜呈</p>
+                        </div>
+                        <div class="d-flex mb-2">
+                            <i class="bi bi-envelope-open text-primary me-2"></i>
+                            <p class="mb-0">a000058556@gmail.com</p>
+                        </div>
+                        <div class="d-flex mb-2">
+                            <i class="bi bi-telephone text-primary me-2"></i>
+                            <p class="mb-0">0986-307-825</p>
+                        </div>
+                        <div class="d-flex mt-4">
+                            <a class="btn btn-primary btn-square me-2" href="#"><i class="fab fa-twitter fw-normal"></i></a>
+                            <a class="btn btn-primary btn-square me-2" href="#"><i class="fab fa-facebook-f fw-normal"></i></a>
+                            <a class="btn btn-primary btn-square me-2" href="#"><i class="fab fa-linkedin-in fw-normal"></i></a>
+                            <a class="btn btn-primary btn-square" href="#"><i class="fab fa-instagram fw-normal"></i></a>
+                        </div>
+                    </div> -->
+                    <div class="col-lg-4 col-md-12 pt-0 pt-lg-5 mb-5">
+                        <div class="section-title section-title-sm position-relative pb-3 mb-4">
+                            <h3 class="text-light mb-0">Quick Links</h3>
+                        </div>
+                        <div class="link-animated d-flex flex-column justify-content-start">
+                            <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Top</a>
+                            <a class="text-light mb-2" href="#about"><i class="bi bi-arrow-right text-primary me-2"></i>About Project</a>
+                            <a class="text-light mb-2" href="#us"><i class="bi bi-arrow-right text-primary me-2"></i>About Us</a>
+                            <a class="text-light mb-2" target="_blank" href="https://github.com/a000058556/EZ-GU_gcp"><i class="bi bi-github text-primary me-2"></i>專案Github</a>
+                            <!-- <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Latest Blog</a>
+                            <a class="text-light" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Contact Us</a> -->
+                        </div>
+                    </div>
+                    <!-- <div class="col-lg-4 col-md-12 pt-0 pt-lg-5 mb-5">
+                        <div class="section-title section-title-sm position-relative pb-3 mb-4">
+                            <h3 class="text-light mb-0">Popular Links</h3>
+                        </div>
+                        <div class="link-animated d-flex flex-column justify-content-start">
+                            <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Home</a>
+                            <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>About Us</a>
+                            <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Our Services</a>
+                            <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Meet The Team</a>
+                            <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Latest Blog</a>
+                            <a class="text-light" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Contact Us</a>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid text-white" style="background: #061429;">
+    <div class="container text-center">
+        <div class="row justify-content-end">
+            <div class="col-lg-8 col-md-6">
+                <div class="d-flex align-items-center justify-content-center" style="height: 75px;">
+                    <div class="col-12 col-sm-6 text-center text-sm-start">
+                        &copy; <a href="#">BDSE25</a>第四組. 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer End -->
+{% endblock %}
+
+{% block BackTop %}
+{% endblock %}
+
+
+{% block script %}
+
+{% block mainjs %}
+<!-- Template Javascript -->
+<script src="/static/js/main_a.js"></script>
+{% endblock %}
+
+{% endblock %}
+

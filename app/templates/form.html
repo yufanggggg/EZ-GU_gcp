@@ -1,0 +1,577 @@
+{% extends 'parts/base.html' %}
+
+{% block content %}
+<!-- Content Start -->
+<div class="content">
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand bg-secondary navbar-dark sticky-top px-4 py-0">
+
+        <a href="#" class="sidebar-toggler flex-shrink-0">
+            <i class="fa fa-bars" style="color: #FFFF;"></i>
+        </a>
+
+        <div class="navbar-nav align-items-center ms-auto">
+           <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="fa fa-bell me-lg-2"></i>
+                    <span class="d-none d-lg-inline-flex">Notificatin</span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
+                    <a href="#" class="dropdown-item">
+                        <h6 class="fw-normal mb-0">Profile updated</h6>
+                        <small>15 minutes ago</small>
+                    </a>
+                    <hr class="dropdown-divider">
+                    <a href="#" class="dropdown-item">
+                        <h6 class="fw-normal mb-0">New user added</h6>
+                        <small>15 minutes ago</small>
+                    </a>
+                    <hr class="dropdown-divider">
+                    <a href="#" class="dropdown-item">
+                        <h6 class="fw-normal mb-0">Password changed</h6>
+                        <small>15 minutes ago</small>
+                    </a>
+                    <hr class="dropdown-divider">
+                    <a href="#" class="dropdown-item text-center">See all notifications</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- Navbar End -->
+
+
+    <!-- Form Start -->
+    <div class="container-fluid pt-4 px-4">
+        <div class="row g-4" style="height: 100%;">
+            <div id="div01" class="col-sm-12 col-xl-6">
+                <div class="bg-secondary rounded h-100 p-4" >
+                    <h6 class="mb-4">填入購買項目</h6>
+                    <form id="fromW" name="in_from" onsubmit="return check_in_from();">
+                        <div class="mb-3">
+                            <label for="exampleInputNo" class="form-label">股票編號</label>
+                            <input type="text" class="form-control" id="exampleInputNo" name="name_st" aria-label="in_from">
+                        </div>
+                        <div class="mb-3 from-group">
+                            <label for="date" class="form-label ">交易日期</label>
+                            <div class="input-group date bootstrap-datetimepicker-widget" >
+                                <input type="text" autocomplete="off" class="form-control bootstrap-datetimepicker-widget" id='datepicker_1'name="input_Date" aria-label="in_from"/>
+                                <span class="input-group-append bootstrap-datetimepicker-widget">
+                                    <span class="input-group-text  d-block">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                </span>
+                            </div>
+
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputBuy" class="form-label">購買價格</label>
+                            <input type="number" class="form-control" step=".01" name="input_Cost" id="exampleInputBuy" aria-label="in_from">
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputnumber" class="form-label">購賣股數</label>
+                            <input type="number" class="form-control" step=".01" name="input_Share" id="exampleInputnumber" aria-label="in_from">
+                        </div>
+                        <button id="submit" type="submit" class="btn btn-info">新增</button>
+                    </form>
+                    <div>
+                        <hr>
+                        <div style="margin: 0.5rem 0 ; ">
+                            <h6>組合預期報酬率說明：</h6>
+                            <p style="margin-bottom: 0;">自選投資標的集合中，觀察組合於相對市場整體經濟風險所預期的報酬率；高報酬伴隨高風險，投資組合可用於評估找出相對低風險高報酬的投資標的。</p>
+                        </div>
+                        <hr style="margin: 0;">
+                        <div style="margin: 0.5rem 0 ; ">
+                            <h6>投資組合市場風險說明：</h6>
+                            <p>利用整體市場相關Beta值，及每一項標的相對於整體投資組合的比例，計算該投資組合在市場中的曝險程度。</p>
+                        </div>
+                        <hr style="margin-bottom: 0;">
+                    </div>
+                </div>
+                
+            </div>
+            <div  id="div02" class="col-sm-12 col-xl-6" >
+                <div  class="bg-secondary text-center rounded p-4" style="height: 100%; position: relative;">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h6 class="mb-0">組合評分</h6>
+                    </div>
+                    <div id="RROR" class="table-responsive" style="width: 100%;height:300px;">
+                    </div>
+                    <div id="MR" class="table-responsive" style="width: 100%;height:300px;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 表格 -->
+
+            <div class="col-12">
+                <div class="bg-secondary rounded h-100 p-4">
+                    <h6 class="mb-4">評估結果</h6>
+                    <div class="table-responsive">
+                        <table id="table_01" class="table  table-bordered table-hover" style="text-align: center; ">
+                            <thead>
+                                <tr class="text-white">
+                                    <th scope="col">購入日期</th>
+                                    <th scope="col">股票代碼</th>
+                                    <th scope="col">標的名稱</th>
+                                    <th scope="col">年化報酬率</th>
+                                    <th scope="col">夏普值</th>
+                                    <th scope="col">貝他值</th>
+                                    <th scope="col" style="display:none">買價</th>
+                                    <th scope="col" style="display:none">MV</th>
+                                    <th scope="col" style="display:none">美國10年國債平均利率</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbMain">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Form End -->
+
+
+    <!-- Footer Start -->
+    <div class="container-fluid pt-4 px-4">
+        <div class="bg-secondary rounded-top p-4">
+            <div class="row">
+                <div class="col-12 col-sm-6 text-center text-sm-start">
+                    &copy; <a href="#">BDSE25</a>第四組. 
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+</div>
+<!-- Content End -->
+{% endblock %}
+
+
+{% block script %}
+<!-- 日歷 -->
+<script src="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+<!-- 輸入傳值 -->
+<script type="text/javascript">
+
+// var height = $("#div01").height(); 
+// $("#div02").css("width", width).css("height", height);
+
+$(".datepicker").attr("autocomplete", "off");
+$(function(){
+    $('#datepicker_1').datepicker({
+        // date:null, //一開始輸入框的日期為空
+        // default:false,
+        // maxDate: 0,
+        format: 'yyyy-mm-dd', //日期的顯示格式
+        // // locale: moment.locale('zh-tw'), //國別
+        daysOfWeekDisabled: [0, 6], //隱藏的天數0為周日6為星期六
+        orientation:'bottom',
+    });
+})
+
+
+// 'blur' 取消點選的時候
+document.getElementById('datepicker_1').addEventListener('blur', (e) => {
+    // console.log(e)
+    let value = e.target.value
+    let today = new Date().getTime()
+    let select = new Date(value).getTime()
+    let current = new Date((select > today) ? today : select)
+    document.getElementById('datepicker_1').value = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()}`
+})
+
+
+
+// 搜尋時頁面: 將in_from取得的股票號碼連同post請求一起傳到後端，取得資料後進行繪圖
+function check_in_from(){
+    if (!in_from.name_st.value.length || !in_from.input_Date.value.length || !in_from.input_Cost.value.length || !in_from.input_Share.value.length){
+    alert('請填入股票購買資訊');
+    return false;
+    }
+    $.ajax({
+    type: "post", // 以post方式發起請求
+    url: "/form_in", // 你的請求鏈接
+    data:$(in_from).serialize(), 
+    beforeSend: function () {
+        // 禁用按鈕防止重複提交
+        document.querySelector("#submit").textContent = '運算中請稍後';
+        $("#submit").attr({ disabled: "disabled" });
+        // $("#spinner").show();
+        
+    },
+    success(data){
+                var data = eval(data);
+                // console.log(data);
+                var tbody = document.getElementById('tbMain'); 
+                // debugger;
+                // console.log(data);
+                var trow = getDataRow(data); //定義一個方法,返回tr資料 
+                tbody.appendChild(trow); 
+
+                let TT = Total_price();
+                console.log(TT);
+                var required_rate_of_return = RR()/TT;
+                console.log(required_rate_of_return);
+
+                var Market_Risk_sum = Market_Risk()/TT;
+                getData_RROR(required_rate_of_return);
+                getData_MR(Market_Risk_sum);
+
+            function getDataRow(data){ 
+                // console.log(data);
+                var row = document.createElement('tr'); //建立row 
+                var DateCell = document.createElement('td'); //建立第一列交易日期 
+                DateCell.innerText = data[0]['Date']; //設定資料
+                row.appendChild(DateCell);//加入資料
+                var idCell = document.createElement('td'); //建立第2列股票代碼 
+                idCell.innerText = data[0]['id']+'.tw';
+                row.appendChild(idCell); 
+                var nameCell = document.createElement('td');//建立第3列name 
+                nameCell.innerHTML = data[0]['id_name']; 
+                row.appendChild(nameCell); 
+                var YearCell = document.createElement('td');//建立第4列Year 
+                YearCell.innerHTML = data[0]['YEAR'];
+                row.appendChild(YearCell); 
+                var SPCell = document.createElement('td');//建立第5列SP 
+                SPCell.innerHTML = data[0]['SP']; 
+                row.appendChild(SPCell); 
+                var BTCell = document.createElement('td');//建立第6列BT 
+                BTCell.innerHTML = data[0]['BT'];
+                row.appendChild(BTCell); 
+                var BYCell = document.createElement('td');//建立第7列買價 
+                BYCell.innerHTML = data[0]['買價'];
+                BYCell.setAttribute('style','display:none'); //隱藏td
+                row.appendChild(BYCell); 
+                var MVCell = document.createElement('td');//建立第8列MV
+                MVCell.innerHTML = data[0]['MV'];
+                MVCell.setAttribute('style','display:none'); //隱藏td
+                row.appendChild(MVCell); 
+                var us10yt_avgCell = document.createElement('td');//建立第9列美國10年國債平均利率
+                us10yt_avgCell.innerHTML = data[0]['us10yt_avg'];
+                us10yt_avgCell.setAttribute('style','display:none'); //隱藏td
+                row.appendChild(us10yt_avgCell); 
+                //到這裡，json中的資料已經新增到表格中，下面為每行末尾新增刪除按鈕 
+                var delCell = document.createElement('td');//建立第7列，操作列 
+                row.appendChild(delCell); 
+                var btnDel = document.createElement('input'); //建立一個input控制元件 
+                btnDel.setAttribute('type','button'); //type="button" 
+                btnDel.setAttribute('class','btn btn-sm btn-primary by'); // 賦予class
+                btnDel.setAttribute('value','刪除');  
+                //刪除操作 
+                btnDel.onclick=function(){ 
+                    if(confirm("確定刪除這一行嘛？")){ 
+                    // 找到按鈕所在行的節點，然後刪掉這一行 
+                    this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode); 
+                    // 重新計算並繪圖
+                    let TT = Total_price();
+                    console.log(TT);
+                    var required_rate_of_return = RR()/TT;
+                    console.log(required_rate_of_return);
+
+                    var Market_Risk_sum = Market_Risk()/TT;
+                    getData_RROR(required_rate_of_return);
+                    getData_MR(Market_Risk_sum);
+                    
+                    //btnDel - td - tr - tbody - 刪除(tr) 
+                    //重新整理網頁還原。實際操作中，還要刪除資料庫中資料，實現真正刪除 
+                    }
+                }
+                delCell.appendChild(btnDel); //把刪除按鈕加入td
+                return row; //返回tr資料   
+            }},
+    complete: function () {
+        //清空輸入框
+        document.getElementById("fromW").reset();
+        document.querySelector("#submit").textContent = '新增';
+        $("#submit").removeAttr("disabled");
+        // $("#spinner").hide();
+        },
+    error: function (data) {
+        console.info("error: " + data.responseText);
+    },
+})
+// 由於已用jquery.post的方式讓表格資料回傳，所以回傳false，阻止onsubmit提交
+    return false;
+}
+
+
+// 計算表格總買價
+function Total_price(){
+    var BY = Number(0);
+    var table=document.getElementById('table_01');
+    for(var i=1; i < table.rows.length; i++){
+        BY = Number(table.rows[i].cells[6].innerHTML) + Number(BY);
+        // console.log(BY);
+    }
+    return(BY)
+};
+
+// RR(投資組合預期報酬率)計算(未除Total_price())
+// 'RR' = (('Beta'* MV) + us10yt_avg) * '買價' 
+// required_rate_of_return = 'ALL_RR'/ Total_price
+function RR(){
+    var sum_rr=Number(0);
+    // var all_rr = []
+    var table=document.getElementById('table_01');
+    for(var i=1; i < table.rows.length; i++){
+        sum_rr = ((Number(table.rows[i].cells[5].innerHTML)*Number(table.rows[i].cells[7].innerHTML))+Number(table.rows[i].cells[8].innerHTML))*(Number(table.rows[i].cells[6].innerHTML))+Number(sum_rr);
+    }
+    // console.log(sum_rr);
+    // console.log(sum_rr/Total_price());
+    return(sum_rr);
+};
+
+
+// MR(投資組合市場風險度)計算(未除Total_price())
+// 'MR' = ('Beta'* MV) * '買價' 
+// Market_Risk = 'ALL_MR'/ Total_price
+function Market_Risk(){
+    var sum_mr=Number(0);
+    var table=document.getElementById('table_01');
+    for(var i=1; i < table.rows.length; i++){
+        sum_mr = (Number(table.rows[i].cells[5].innerHTML))*(Number(table.rows[i].cells[6].innerHTML))+Number(sum_mr);
+        console.log(sum_mr);
+    }
+    return(sum_mr);
+};
+
+
+// 以下為投資組合預期報酬率 required_rate_of_return
+var chartDom = document.getElementById('RROR');
+var RROR = echarts.init(chartDom, 'dark');
+var option;
+
+function getData_RROR(data) {
+// 開始繪圖
+RROR_lin(data);
+RROR.setOption(option);
+// 設定自動符合視窗大小
+window.addEventListener("resize",function(){RROR.resize();});    
+};
+
+function RROR_lin(_rawData) {
+    option = {
+    series: [
+    {
+    type: 'gauge',
+    radius: '140%', // 儀錶板大小
+    startAngle: 180, // 起始角度
+    endAngle: 0,
+    min: -100, // 最小刻度
+    max: 100,
+    splitNumber: 8,  
+    center: ['50%', '80%'],  // 儀錶板位置
+    axisLine: {
+        lineStyle: {
+        width: 6,
+        color: [
+            [0.25, '#C2FFD8'],
+            [0.5, new echarts.graphic.LinearGradient(
+                0,1,0,0,
+                [{
+                    offset: 0,
+                    color:'#C2FFD8'
+                },{
+                    offset: 0.8,
+                    color:'#00EAFF'
+                }]
+            )],
+            [0.75,new echarts.graphic.LinearGradient(
+                0,0,1,0,
+                [{
+                    offset: 0,
+                    color:'#00EAFF'
+                },{
+                    offset: 0.8,
+                    color:'#5151E5'
+                }]
+            )],
+            [1, '#5151E5']
+        ]
+        }
+    },
+    pointer: {
+        icon: 'path://M12.8,0.7l12,40.1H0.7L12.8,0.7z',
+        length: '12%',
+        width: 20,
+        offsetCenter: [0, '-60%'],
+        itemStyle: {
+        color: 'auto'
+        }
+    },
+    axisTick: {
+        length: 12,
+        lineStyle: {
+        color: 'auto',
+        width: 2
+        }
+    },
+    splitLine: {
+        length: 20,
+        lineStyle: {
+        color: 'auto',
+        width: 5
+        }
+    },
+    axisLabel: {
+        color: '#ffff',
+        fontSize: 20,
+        distance: -60,
+        formatter: function (value) {
+        if (value === 87.50) {
+            return '需注意';
+        } else if (value === 62.50) {
+            return '高風險';
+        } else if (value === -37.50) {
+            return '中風險';
+        } else if (value === -12.50) {
+            return '低風險';
+        }
+        return '';
+        }
+    },
+    // 組合預期報酬率 文字大小/位置
+    title: {
+        offsetCenter: [0, '-30%'],
+        fontSize: 30
+    },
+    detail: {
+        fontSize: 50,
+        offsetCenter: [0, '0%'],
+        valueAnimation: true,
+        formatter: function (value) {
+        return Math.round(value*100)/100 + '分';
+        },
+        color: '#ffff'
+    },
+    data: [
+        {
+        // 資料放這裡
+        value: _rawData,
+        fontSize: 30,
+        offsetCenter: [0, '50%'],
+        name: '組合預期報酬率'
+        }
+    ]
+    }
+],
+    backgroundColor: '#191C24',
+};
+    
+}
+option && RROR.setOption(option);
+
+
+// 以下為投資組合市場風險度 Market_Risk
+var chartDom = document.getElementById('MR');
+var MR = echarts.init(chartDom, 'dark');
+var option;
+
+function getData_MR(data) {
+// 開始繪圖
+MR_lin(data);
+MR.setOption(option);
+// 設定自動符合視窗大小
+window.addEventListener("resize",function(){MR.resize();});    
+};
+
+function MR_lin(_rawData) {
+    option = {
+    series: [
+    {
+    type: 'gauge',
+    radius: '140%', // 儀錶板大小
+    startAngle: 180, // 起始角度
+    endAngle: 0,
+    min: 0, // 最小刻度
+    max: 100,
+    splitNumber: 8,  
+    center: ['50%', '80%'],  // 儀錶板位置
+    axisLine: {
+        lineStyle: {
+        width: 6,
+        color: [
+            [0.25, '#FF6E76'],
+            [0.5, '#FDDD60'],
+            [0.75, '#58D9F9'],
+            [1, '#7CFFB2']
+        ]
+        }
+    },
+    pointer: {
+        icon: 'path://M12.8,0.7l12,40.1H0.7L12.8,0.7z',
+        length: '12%',
+        width: 20,
+        offsetCenter: [0, '-60%'],
+        itemStyle: {
+        color: 'auto'
+        }
+    },
+    axisTick: {
+        length: 12,
+        lineStyle: {
+        color: 'auto',
+        width: 2
+        }
+    },
+    splitLine: {
+        length: 20,
+        lineStyle: {
+        color: 'auto',
+        width: 5
+        }
+    },
+    axisLabel: {
+        color: '#ffff',
+        fontSize: 15,
+        distance: -70,
+        formatter: function (value) {
+        if (value === 87.50) {
+            return '注意';
+        } else if (value === 62.50) {
+            return '高';
+        } else if (value === 37.50) {
+            return '中';
+        } else if (value === 12.50) {
+            return '低';
+        }
+        return '';
+        }
+    },
+    // 組合預期報酬率 文字大小/位置
+    title: {
+        offsetCenter: [0, '-30%'],
+        fontSize: 30
+    },
+    detail: {
+        fontSize: 50,
+        offsetCenter: [0, '0%'],
+        valueAnimation: true,
+        formatter: function (value) {
+        return Math.round(value*100)/100 + '分';
+        },
+        color: 'auto'
+    },
+    data: [
+        {
+        // 資料放這裡
+        value: _rawData,
+        fontSize: 30,
+        offsetCenter: [0, '50%'],
+        name: '投資組合市場風險'
+        }
+    ]
+    }
+],
+    backgroundColor: '#191C24',
+};
+    
+}
+option && MR.setOption(option);
+
+</script>
+{% endblock %}
